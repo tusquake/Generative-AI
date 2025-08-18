@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "weatherData": {
+      "command": "node",
+      "args": ["index.js"],
+      "env": {
+        "API_KEY": "value"
+      }
+    }
+  }
+}

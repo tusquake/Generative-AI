@@ -30,7 +30,7 @@ Generative-AI/
    ```
 3. Run the examples  
    ```bash
-   npm start
+   node index.js
    ```
 
 ## 📖 Usage

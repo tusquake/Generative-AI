@@ -1,0 +1,28 @@
+{
+  "name": "gemini-rag-chatbot",
+  "version": "1.0.0",
+  "description": "RAG Chatbot using Gemini API and Pinecone Vector Database",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "keywords": [
+    "rag",
+    "chatbot",
+    "gemini",
+    "pinecone",
+    "ai",
+    "vector-database"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@pinecone-database/pinecone": "^3.0.3",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "pdf-parse": "^1.1.1"
+  }
+}

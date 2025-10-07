@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini RAG Chatbot UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            /* Indigo 600 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Dark background */
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+
+        /* Custom scrollbar for chat history */
+        #chat-history::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-history::-webkit-scrollbar-thumb {
+            background-color: #374151;
+            /* Gray 700 */
+            border-radius: 3px;
+        }
+
+        .user-message {
+            background-color: #4f46e5;
+            /* Indigo 600 */
+            align-self: flex-end;
+        }
+
+        .ai-message {
+            background-color: #374151;
+            /* Gray 700 */
+            align-self: flex-start;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Application Container -->
+    <div id="app"
+        class="w-full max-w-5xl bg-gray-800 shadow-2xl rounded-xl overflow-hidden grid md:grid-cols-3 grid-cols-1 gap-4 p-4">
+
+        <!-- Left Panel: Status, Configuration, and Actions -->
+        <div class="md:col-span-1 bg-gray-900 rounded-lg p-6 flex flex-col space-y-6">
+            <h2 class="text-2xl font-bold text-white border-b border-indigo-700 pb-3">RAG Status</h2>
+
+            <!-- System Status -->
+            <div id="status-card" class="space-y-3">
+                <div class="flex items-center space-x-2">
+                    <span id="gemini-status" class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="text-sm font-medium">Gemini API Ready</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span id="pinecone-status" class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="text-sm font-medium">Vector Index Ready</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span id="document-status" class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                    <span class="text-sm font-medium" id="doc-count">0 Documents Indexed</span>
+                </div>
+            </div>
+
+            <!-- Indexing Action -->
+            <div class="mt-4">
+                <button id="index-button"
+                    class="w-full px-4 py-3 text-white font-semibold rounded-lg transition duration-300 ease-in-out shadow-lg transform hover:scale-[1.01] bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                    <svg id="index-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path
+                            d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM6 13a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zM4 17a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z" />
+                    </svg>
+                    <span id="index-text">Index Documents</span>
+                </button>
+            </div>
+
+            <!-- Index Statistics (Mock) -->
+            <div class="mt-4 border-t border-gray-700 pt-4">
+                <h3 class="text-lg font-semibold mb-2">Index Stats</h3>
+                <p class="text-sm text-gray-400">Total Vectors: <span id="stat-vectors"
+                        class="font-bold text-white">0</span></p>
+                <p class="text-sm text-gray-400">Dimension: <span id="stat-dimension"
+                        class="font-bold text-white">768</span></p>
+                <button onclick="clearChat()"
+                    class="mt-4 text-xs text-red-400 hover:text-red-300 transition duration-150">Clear Chat
+                    History</button>
+            </div>
+
+        </div>
+
+        <!-- Right Panel: Chat Interface -->
+        <div class="md:col-span-2 bg-gray-900 rounded-lg flex flex-col h-[80vh] min-h-[500px]">
+            <header class="p-4 border-b border-indigo-700">
+                <h2 class="text-xl font-semibold text-white">RAG Chat</h2>
+                <p class="text-sm text-gray-400">Ask questions about the indexed documents.</p>
+            </header>
+
+            <!-- Chat History Display -->
+            <div id="chat-history" class="flex-grow overflow-y-auto p-4 space-y-4">
+                <!-- Initial welcome message -->
+                <div class="ai-message p-3 rounded-lg max-w-xs md:max-w-md shadow-md">
+                    <p class="text-sm font-semibold text-indigo-300 mb-1">System</p>
+                    <p class="text-sm">Welcome! Please click "Index Documents" to load the RAG data before chatting.</p>
+                </div>
+            </div>
+
+            <!-- Input and Source Container -->
+            <div class="p-4 border-t border-gray-700 space-y-3">
+
+                <!-- Source Display Area -->
+                <div id="source-display" class="hidden p-3 bg-gray-700 rounded-lg border border-gray-600">
+                    <h4 class="text-xs font-semibold text-indigo-400 mb-1">Sources Used:</h4>
+                    <ul id="source-list" class="text-xs text-gray-300 space-y-0.5">
+                        <!-- Sources will be injected here -->
+                    </ul>
+                </div>
+
+                <!-- Chat Input Form -->
+                <form id="chat-form" class="flex items-center space-x-3">
+                    <input type="text" id="chat-input" placeholder="Type your question..." autocomplete="off"
+                        class="flex-grow p-3 rounded-lg border border-gray-700 bg-gray-700 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 shadow-inner disabled:opacity-60"
+                        disabled />
+                    <button type="submit" id="send-button"
+                        class="px-4 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-500 transition duration-150 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        disabled>
+                        Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatHistory = document.getElementById('chat-history');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const indexButton = document.getElementById('index-button');
+        const indexText = document.getElementById('index-text');
+        const docCount = document.getElementById('doc-count');
+        const statVectors = document.getElementById('stat-vectors');
+        const sourceDisplay = document.getElementById('source-display');
+        const sourceList = document.getElementById('source-list');
+
+        let isIndexed = false;
+        let isProcessing = false;
+
+        /**
+         * Creates and appends a message bubble to the chat history.
+         */
+        function addMessage(role, content, sources = []) {
+            const messageWrapper = document.createElement('div');
+
+            // Determine styling based on role
+            const roleClass = role === 'user' ? 'user-message' : 'ai-message';
+            const alignmentClass = role === 'user' ? 'self-end' : 'self-start';
+            const maxWClass = role === 'user' ? 'max-w-xs' : 'max-w-md';
+
+            messageWrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-3`;
+
+            messageWrapper.innerHTML = `
+                <div class="p-3 rounded-lg ${roleClass} ${maxWClass} shadow-md transition-all duration-300">
+                    ${role === 'ai' ? '<p class="text-sm font-semibold text-indigo-300 mb-1">Assistant</p>' : ''}
+                    <p class="text-sm whitespace-pre-wrap">${content}</p>
+                </div>
+            `;
+            chatHistory.appendChild(messageWrapper);
+
+            // Handle sources display only for the AI response
+            if (role === 'ai' && sources.length > 0) {
+                displaySources(sources);
+            } else if (role === 'user') {
+                // Clear sources when user asks a new question
+                sourceDisplay.classList.add('hidden');
+                sourceList.innerHTML = '';
+            }
+
+            // Scroll to the bottom
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        /**
+         * Populates the source display area.
+         */
+        function displaySources(sources) {
+            sourceList.innerHTML = '';
+            sources.forEach((source, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `[${index + 1}] ${source.name} (Chunk Score: ${source.score})`;
+                sourceList.appendChild(li);
+            });
+            sourceDisplay.classList.remove('hidden');
+        }
+
+        /**
+         * Mocks the document indexing process.
+         */
+        async function handleIndex() {
+            if (isProcessing) return;
+
+            isProcessing = true;
+            indexButton.disabled = true;
+            indexText.textContent = 'Indexing... (1/4)';
+            document.getElementById('document-status').classList.replace('bg-yellow-500', 'bg-red-500');
+
+            // 1. Simulate Document Loading (1 second)
+            await new Promise(r => setTimeout(r, 1000));
+            indexText.textContent = 'Indexing... (2/4) Chunks created';
+            docCount.textContent = '1 Document Indexed';
+
+            // 2. Simulate Embedding Generation (2 seconds - accounts for rate limiting/batching)
+            await new Promise(r => setTimeout(r, 2000));
+            indexText.textContent = 'Indexing... (3/4) Embeddings generated';
+
+            // 3. Simulate Pinecone Upsert (1 second)
+            await new Promise(r => setTimeout(r, 1000));
+            indexText.textContent = 'Indexing... (4/4) Upserting vectors';
+
+            // Success
+            isIndexed = true;
+            isProcessing = false;
+            indexButton.disabled = true;
+            indexButton.classList.replace('bg-indigo-600', 'bg-green-600');
+            indexButton.classList.replace('hover:bg-indigo-500', 'hover:bg-green-500');
+            indexText.textContent = 'Indexing Complete!';
+
+            document.getElementById('document-status').classList.replace('bg-red-500', 'bg-green-500');
+            docCount.textContent = '1 Document Indexed';
+            statVectors.textContent = '45'; // Mock stats
+
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+
+            addMessage('ai', "Documents indexed successfully. You can now start asking questions!");
+        }
+
+        /**
+         * Mocks the RAG query process.
+         */
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const question = chatInput.value.trim();
+            if (!question || !isIndexed) return;
+
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+
+            addMessage('user', question);
+
+            // Add thinking indicator
+            const thinkingBubble = document.createElement('div');
+            thinkingBubble.id = 'thinking-bubble';
+            thinkingBubble.className = 'ai-message p-3 rounded-lg max-w-xs md:max-w-md shadow-md self-start flex items-center space-x-2';
+            thinkingBubble.innerHTML = `
+                <p class="text-sm font-semibold text-indigo-300 mb-0">Assistant</p>
+                <div class="flex space-x-1">
+                    <span class="animate-bounce-slow h-2 w-2 bg-indigo-400 rounded-full"></span>
+                    <span class="animate-bounce-slow h-2 w-2 bg-indigo-400 rounded-full animation-delay-200"></span>
+                    <span class="animate-bounce-slow h-2 w-2 bg-indigo-400 rounded-full animation-delay-400"></span>
+                </div>
+            `;
+            chatHistory.appendChild(thinkingBubble);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+
+            // --- MOCK API CALL (Replace with actual fetch to your Node.js endpoint) ---
+            await new Promise(r => setTimeout(r, 1500 + Math.random() * 500));
+
+            // Remove thinking indicator
+            document.getElementById('thinking-bubble')?.remove();
+
+            const mockAnswer = `Based on the provided context from the indexed PDF, the most recent version of the document (Version 5) outlines the new space program architecture, emphasizing collaboration between public and private entities [1]. Key changes include a revised budget allocation and a shift toward reusable launch vehicles [2].`;
+
+            const mockSources = [
+                { name: '05-versions-space.pdf', score: '0.921' },
+                { name: '05-versions-space.pdf', score: '0.885' }
+            ];
+
+            addMessage('ai', mockAnswer, mockSources);
+            // --- END MOCK API CALL ---
+
+            chatInput.disabled = false;
+            sendButton.disabled = false;
+            chatInput.focus();
+        }
+
+        function clearChat() {
+            chatHistory.innerHTML = `
+                <div class="ai-message p-3 rounded-lg max-w-xs md:max-w-md shadow-md">
+                    <p class="text-sm font-semibold text-indigo-300 mb-1">System</p>
+                    <p class="text-sm">Chat history cleared. Waiting for your next question.</p>
+                </div>
+            `;
+            sourceDisplay.classList.add('hidden');
+        }
+
+        // Event Listeners
+        indexButton.addEventListener('click', handleIndex);
+        chatForm.addEventListener('submit', handleChatSubmit);
+
+        // Tailwind Animation Utility
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'bounce-slow': 'bounce 1s infinite',
+                    },
+                    colors: {
+                        'indigo-600': '#4f46e5',
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

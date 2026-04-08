@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  genai-app:
+    build: .
+    container_name: genai_curriculum
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    stdin_open: true # Allows interactive mode (docker attach)
+    tty: true        # Allows interactive mode

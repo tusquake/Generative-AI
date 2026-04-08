@@ -1,0 +1,15 @@
+.git
+__pycache__
+.env
+.venv
+Dockerfile
+docker-compose.yml
+requirements.txt
+README.md
+implementation_plan.md
+walkthrough.md
+*.pyc
+*.pyo
+*.pyd
+.db
+.ipynb_checkpoints

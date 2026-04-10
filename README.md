@@ -1,208 +1,102 @@
-# Generative AI Learning Repository
+# Generative AI Mastery & Learning Repository
 
-This repository provides comprehensive implementations and demonstrations of **Generative AI concepts** through practical examples. It serves as a learning platform for understanding how modern AI systems work, from basic language models to advanced retrieval-augmented generation and AI agents.
+This repository is a comprehensive learning platform for **Generative AI Engineering**. It combines a systematically structured 50-topic mastery curriculum with production-grade conceptual implementations and standalone AI applications.
 
-## Core Generative AI Concepts Implemented
+---
 
-### 1. Large Language Models (LLMs)
-**Location**: `How LLM works/`
-- **Basic Chat Implementation**: Demonstrates fundamental LLM interaction using Google's Gemini models
-- **Conversation Management**: Shows how to maintain chat history and context
-- **Model Selection**: Examples using different Gemini model variants (gemini-2.0-flash, gemini-2.5-flash)
+## 🎓 50-Topic Mastery Curriculum
+We are covering 50 critical topics in Generative AI, organized into 10 domains. Each domain contains **Theory** (conceptual guides & interview prep) and **Practice** (Python/JS implementations) co-located within their respective folders.
 
-### 2. Retrieval-Augmented Generation (RAG)
-**Location**: `gemini-rag-chatbot/`
-- **Document Processing**: Converts PDFs and text files into searchable chunks
-- **Vector Embeddings**: Uses Gemini's embedding model to create semantic representations
-- **Vector Database Integration**: Implements Pinecone for efficient similarity search
-- **Context-Aware Responses**: Generates answers based on retrieved document context
-- **Conversation Memory**: Maintains chat history for contextual follow-up questions
+**Current Progress**: 25/50 Topics Completed (Domains 1-5)
 
-### 3. AI Agents with Function Calling
-**Location**: `AI Agent/`
-- **Tool Integration**: Demonstrates how AI agents can use external tools and APIs
-- **Function Declarations**: Shows proper schema definition for tool parameters
-- **Multi-Tool Coordination**: Implements agents that can choose between multiple available tools
-- **Dynamic Tool Execution**: Real-time tool calling based on user queries
-- **Tool Categories**: Mathematical operations, data fetching, and computational tasks
+### 🧱 Domain 1: Foundations
+*How LLMs work under the hood.*
+- [x] [01. Architecture Intuition](01_Foundations/Theory/01_Architecture.md)
+- [x] [02. Tokenization & Context Windows](01_Foundations/Theory/02_Tokenization.md)
+- [x] [03. Sampling Parameters](01_Foundations/Theory/03_Sampling_Parameters.md)
+- [x] [04. API Fundamentals](01_Foundations/Theory/04_API_Fundamentals.md)
+- [x] [05. System vs. User Prompts](01_Foundations/Theory/05_System_vs_User.md)
 
-### 4. Advanced AI Agents
-**Location**: `Cursor/` and `OpenAI Agent SDK/`
-- **System Instructions**: Complex prompt engineering for specialized agent behavior
-- **Command Execution**: Agents that can execute terminal commands and file operations
-- **Multi-Step Planning**: Agents that break down complex tasks into sequential steps
-- **Cross-Platform Support**: Handles different operating systems (Windows, Linux, macOS)
-- **Validation Loops**: Implements plan-execute-validate-repeat workflows
+### ✍️ Domain 2: Prompt Engineering
+*Improving output quality via static instructions.*
+- [x] [06. Zero-Shot Prompting](02_Prompt_Engineering/Theory/06_Zero_Shot.md)
+- [x] [07. Few-Shot Prompting](02_Prompt_Engineering/Theory/07_Few_Shot.md)
+- [x] [08. Chain-of-Thought](02_Prompt_Engineering/Theory/08_Chain_of_Thought.md)
+- [x] [09. Self-Correction](02_Prompt_Engineering/Theory/09_Self_Correction.md)
+- [x] [10. Role Prompting](02_Prompt_Engineering/Theory/10_Role_Prompting.md)
 
-### 5. Model Context Protocol (MCP)
-**Location**: `MCP Server/`
-- **Server Implementation**: Creates MCP servers for tool integration
-- **Schema Validation**: Uses Zod for robust parameter validation
-- **Tool Registration**: Demonstrates how to register and expose tools to AI models
-- **Data Processing**: Shows integration with external data sources and APIs
+### 🧠 Domain 3: Advanced Prompting & Reasoning
+*Advanced logical frameworks for complex problem solving.*
+- [x] [11. Tree of Thoughts](03_Advanced_Prompting/Theory/11_Tree_of_Thoughts.md)
+- [x] [12. ReAct (Reason + Act)](03_Advanced_Prompting/Theory/12_ReAct.md)
+- [x] [13. Directional Stimulus](03_Advanced_Prompting/Theory/13_Directional_Stimulus.md)
+- [x] [14. Program-of-Thoughts](03_Advanced_Prompting/Theory/14_Program_of_Thoughts.md)
+- [x] [15. Automatic Prompt Engineer](03_Advanced_Prompting/Theory/15_Automatic_Prompt_Engineer.md)
 
-### 6. Memory and Context Management
-**Location**: `Memory in AI/`
-- **Memory Types**: Documentation and examples of different memory patterns in AI systems
-- **Context Preservation**: Techniques for maintaining conversation context
-- **Memory Optimization**: Strategies for managing memory efficiently in long conversations
+### 📂 Domain 4: Data & Context (RAG)
+*Retrieving private data to ground the AI's knowledge.*
+- [x] [16. RAG Fundamentals](04_Data_and_Context/Theory/16_RAG_Fundamentals.md)
+- [x] [17. Vector Databases & Embeddings](04_Data_and_Context/Theory/17_Vector_Databases_and_Embeddings.md)
+- [x] [18. Chunking Strategies](04_Data_and_Context/Theory/18_Chunking_Strategies.md)
+- [x] [19. Context Management](04_Data_and_Context/Theory/19_Context_Management.md)
+- [x] [20. Evaluation & Grounding](04_Data_and_Context/Theory/20_Evaluation_and_Grounding.md)
 
-## Project Structure
-```
-Generative-AI/
-│
-├── AI Agent/                    # Function calling and tool integration
-├── Cursor/                      # Advanced agent with command execution
-├── gemini-rag-chatbot/         # Complete RAG implementation
-├── How LLM works/              # Basic LLM concepts and chat
-├── MCP Server/                 # Model Context Protocol implementation
-├── OpenAI Agent SDK/           # Alternative agent framework
-├── Memory in AI/               # Memory management concepts
-├── RAG/                        # RAG documentation and resources
-└── README.md
-```
+### 🤖 Domain 5: Agentic Workflows
+*Building autonomous loops that can take actions.*
+- [x] [21. Multi-Agent Systems](05_Agent_Workflows/Theory/21_Multi_Agent_Systems.md)
+- [x] [22. Tool Calling & Function Binding](05_Agent_Workflows/Theory/22_Tool_Calling.md)
+- [x] [23. Memory Management](05_Agent_Workflows/Theory/23_Memory_Management.md)
+- [x] [24. Planning & Plan Execution](05_Agent_Workflows/Theory/24_Planning_and_Execution.md)
+- [x] [25. Agent Reliability & Self-Consistency](05_Agent_Workflows/Theory/25_Agent_Reliability.md)
 
-## Key Technologies and Frameworks
+### 🎨 Domain 6: Multi-Modality
+*Beyond text: Vision, Audio, and Image Generation.*
+- [ ] 26. Vision-Language Models (VLM)
+- [ ] 27. Image Generation (Stable Diffusion/DALL-E)
+- [ ] 28. Audio Synthesis & STT
+- [ ] 29. Video Generation Fundamentals
+- [ ] 30. Specialized Architectures (MoE, State Space)
 
-### AI Models
-- **Google Gemini**: Primary LLM for text generation and embeddings
-- **Gemini 2.0 Flash**: Latest model for conversational AI
-- **Gemini 2.5 Flash**: Advanced model for complex reasoning
-- **Embedding Models**: For semantic search and document similarity
+### 🛡️ Domain 7 - 10: Advanced Topics
+*Fine-tuning, Evaluation, LLMOps, and Future Trends.*
+- [ ] 31. SFT & PEFT (LoRA)
+- [ ] 36. LLM-as-a-Judge
+- [ ] 41. Quantization & Deployment
+- [ ] 50. AGI Roadmap & Ethics
+*(Full list available in the commit history)*
 
-### Vector Databases
-- **Pinecone**: Cloud-based vector database for similarity search
-- **Vector Operations**: Efficient storage and retrieval of embeddings
+---
 
-### Development Tools
-- **Node.js**: Runtime environment for all implementations
-- **Google Generative AI SDK**: Official SDK for Gemini integration
-- **Pinecone SDK**: Vector database client
-- **Zod**: Schema validation library
-- **Axios**: HTTP client for API calls
+## 🚀 Standalone Projects & SDKs
+- **[gemini-rag-chatbot/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/gemini-rag-chatbot/)**: Full-stack RAG implementation.
+- **[AI Agent/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/AI%20Agent/)**: Function calling and tool integration demos.
+- **[Cursor/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/Cursor/)**: Agentic workflows for code execution.
+- **[MCP Server/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/MCP%20Server/)**: Model Context Protocol integration.
+- **[OpenAI Agent SDK/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/OpenAI%20Agent%20SDK/)**: Alternative agent frameworks.
 
-### Agent Frameworks
-- **Custom Agent Implementation**: Hand-built agent architecture
-- **OpenAI Agent SDK**: Third-party agent framework
-- **Model Context Protocol**: Standardized tool integration protocol
+---
 
-## Installation and Setup
+## 🔑 Key Technologies
+- **Models**: Google Gemini 2.0/2.5 Flash, OpenAI.
+- **Vector DBs**: Pinecone, ChromaDB.
+- **Frameworks**: LangChain, AutoGen, CrewAI, MCP.
+- **Languages**: Python, JavaScript (Node.js).
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn package manager
-- Google AI API key
-- Pinecone API key (for RAG functionality)
+---
 
-### Quick Start
-1. Clone the repository
-   ```bash
-   git clone https://github.com/tusquake/Generative-AI.git
-   cd Generative-AI
-   ```
+## ⚙️ Installation & Setup
 
-2. Install dependencies for each project
-   ```bash
-   # For basic LLM examples
-   cd "How LLM works"
-   npm install
-   
-   # For RAG chatbot
-   cd ../gemini-rag-chatbot
-   npm install
-   
-   # For AI agents
-   cd ../AI Agent
-   npm install
-   ```
+1.  Clone the repository and install dependencies at the root or within specific project folders.
+2.  Configure your environment:
+    ```bash
+    GOOGLE_API_KEY=your_key_here
+    PINECONE_API_KEY=your_key_here
+    ```
+3.  **Run a Topic**:
+    ```bash
+    # Example: Run a foundations practice script
+    python 01_Foundations/Practice/01_Architecture.py
+    ```
 
-3. Configure environment variables
-   - Set your Google AI API key
-   - Set your Pinecone API key (for RAG)
-   - Update configuration files as needed
-
-4. Run examples
-   ```bash
-   # Basic chat
-   node "How LLM works/index.js"
-   
-   # RAG chatbot
-   node gemini-rag-chatbot/src/index.js
-   
-   # AI agent
-   node "AI Agent/index.js"
-   ```
-
-## Usage Examples
-
-### Basic Chat
-```javascript
-// Simple conversation with Gemini
-const response = await ai.models.generateContent({
-  model: "gemini-2.0-flash",
-  contents: conversationHistory
-});
-```
-
-### RAG Implementation
-```javascript
-// Query with document context
-const result = await ragService.query("What is machine learning?");
-console.log(result.answer);
-console.log("Sources:", result.sources);
-```
-
-### Function Calling
-```javascript
-// Agent with tool access
-const response = await ai.models.generateContent({
-  model: "gemini-2.5-flash",
-  contents: history,
-  config: {
-    tools: [{ functionDeclarations: [toolSchema] }]
-  }
-});
-```
-
-## Learning Path
-
-### Beginner Level
-1. Start with `How LLM works/` to understand basic LLM interaction
-2. Explore conversation management and context handling
-3. Learn about different model variants and their capabilities
-
-### Intermediate Level
-1. Dive into `AI Agent/` for function calling concepts
-2. Understand tool integration and parameter validation
-3. Learn about agent decision-making processes
-
-### Advanced Level
-1. Study the complete RAG implementation in `gemini-rag-chatbot/`
-2. Explore vector embeddings and similarity search
-3. Understand document processing and chunking strategies
-4. Learn about conversation memory and context management
-
-### Expert Level
-1. Examine the advanced agent in `Cursor/` for complex task execution
-2. Study MCP implementation for standardized tool integration
-3. Explore memory management patterns and optimization techniques
-4. Understand cross-platform compatibility and error handling
-
-## Future Concepts and Extensions
-
-### Planned Implementations
-- **Multi-Modal AI**: Integration of text, image, and audio processing
-- **Fine-Tuning**: Custom model training and adaptation
-- **Agent Orchestration**: Multi-agent systems and coordination
-- **Advanced RAG**: Hybrid search, re-ranking, and query optimization
-- **Memory Systems**: Long-term memory and knowledge graphs
-- **Evaluation Metrics**: Performance measurement and benchmarking
-
-### Advanced Topics
-- **Prompt Engineering**: Advanced techniques for better model performance
-- **Chain-of-Thought**: Reasoning patterns and step-by-step problem solving
-- **Few-Shot Learning**: Learning from limited examples
-- **Reinforcement Learning**: Agent training through interaction and feedback
-- **Federated Learning**: Distributed model training across multiple agents
-
-
+---
+*Keep this file updated as we progress through the 50-topic mastery journey.*

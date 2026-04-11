@@ -1,16 +1,52 @@
-# Topic 3: Sampling parameters - Temperature, Top-p, Top-k, max_tokens
+# 03. Sampling Parameters
 
-## 1. Scenario: The Creative vs. The Factual
+> **Mentor note:** Tuning sampling parameters is like adjusting the "creative knobs" of the model. Too high, and the model starts talking nonsense; too low, and it becomes a boring, repetitive robot. For production agents, we usually favor stability (Low Temp) over creativity.
 
-Imagine you are building two different apps:
-1. A "Sci-Fi Story Writer" that needs to surprise the reader with unexpected plot twists.
-2. A "Medical Dosage Calculator" that must be 100% consistent and never take risks.
+---
 
-You are using the exact same LLM for both. How do you make one creative and the other incredibly strict? You use Sampling Parameters.
+## What You'll Learn
 
-## 2. Implementation: Testing Temperature
+- The mathematical intuition behind Temperature (Entropy)
+- The difference between Top-K (Frequency) and Top-P (Probability)
+- How to calibrate parameters for creative vs. factual use cases
+- The "Hard Ceiling" effect of `max_tokens` and `stop_sequences`
+- Model-agnostic configuration patterns
 
-This script demonstrates how changing the "heat" of the model changes its output.
+---
+
+## Theory & Intuition
+
+### Temperature: The "Risk" Knob
+
+LLMs predict the next token by calculating a probability distribution. Temperature changes the "shape" of this distribution before the model picks the token.
+
+```mermaid
+graph TD
+    A[Raw Probabilities] --> B{Temperature}
+    B -- "Low (0.1)" --> C[Sharp Peak: Higher chance for top token]
+    B -- "Medium (0.7)" --> D[Natural: Balanced distribution]
+    B -- "High (1.5)" --> E[Flat: Every token has a chance]
+    C --> F[Conservative/Reliable]
+    D --> G[Creative/Human-like]
+    E --> H[Chaotic/Hallucinogenic]
+```
+
+### Top-K vs. Top-P (Nucleus Sampling)
+
+Imagine predicting the next word for: *"The capital of France is..."*
+- **Paris** (94%)
+- **Lyon** (2%)
+- **Marseille** (1%)
+- **London** (0.5%)
+
+**Top-K = 2** always takes the absolute top 2: `[Paris, Lyon]`.
+**Top-P = 0.95** adds probabilities until they hit 0.95. Since Paris is 94%, it adds Lyon (2%) to hit 96% and stops. The pool is `[Paris, Lyon]`. Top-P is dynamic and safer for production.
+
+---
+
+## 💻 Code & Implementation
+
+### Calibrating Gemini for Creative vs. Factual Tasks
 
 ```python
 import google.generativeai as genai
@@ -23,64 +59,64 @@ def test_sampling():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
     model = genai.GenerativeModel('gemini-1.5-flash')
     
-    prompt = "The most interesting thing about space is..."
+    prompt = "The most interesting thing about quantum physics is..."
 
-    # 1. Low Temperature (The "Safe" choice)
-    config_low = genai.types.GenerationConfig(temperature=0.1)
+    # 1. Factual Configuration (Low Temperature)
+    config_strict = genai.types.GenerationConfig(
+        temperature=0.1,
+        top_p=0.1,
+        max_output_tokens=100
+    )
     
-    # 2. High Temperature (The "Creative" choice)
-    config_high = genai.types.GenerationConfig(temperature=1.0)
+    # 2. Creative Configuration (High Temperature)
+    config_creative = genai.types.GenerationConfig(
+        temperature=1.0,
+        top_p=0.9,
+        top_k=40,
+        max_output_tokens=100
+    )
 
-    print("--- Low Temp (0.1) ---")
-    print(model.generate_content(prompt, generation_config=config_low).text)
+    print("--- Strict Output (Deterministic-ish) ---")
+    print(model.generate_content(prompt, generation_config=config_strict).text)
     
-    print("\n--- High Temp (1.0) ---")
-    print(model.generate_content(prompt, generation_config=config_high).text)
+    print("\n--- Creative Output (Varied) ---")
+    print(model.generate_content(prompt, generation_config=config_creative).text)
 
 if __name__ == "__main__":
     test_sampling()
 ```
 
-## 3. Concept Breakdown
+> **Senior tip:** Never use `temperature=2.0` in a real app unless you want pure chaos. Most production systems use `0.0` for code/extraction and `0.7` for chat/creative writing.
 
-### The Dice Analogy (Temperature)
-LLMs choose words by calculating probabilities (e.g., "mat" is 80% likely, "moon" is 5%).
-- Temperature 0.0: The model always picks the word with the highest probability.
-- Temperature 1.0: The model picks words proportional to their probability.
-- Temperature 2.0: The model starts giving chance to even the most unlikely words.
+---
 
-### Top-K vs. Top-P: The Concrete Example
-Imagine the model is predicting the next word for: "The capital of France is..."
-Scores: Paris (94%), Lyon (2%), Marseille (1%), London (0.5%), Bread (0.1%).
+## When NOT to Use High Temperature
 
-- Top-K = 3 (Fixed Count):
-  Always takes the top 3 words: [Paris, Lyon, Marseille].
-- Top-P = 0.95 (Dynamic Threshold):
-  Adds scores until they hit 0.95. 
-  Paris (94%) is not enough. Adding Lyon (2%) makes it 96%.
-  The pool stops at [Paris, Lyon]. Marseille is excluded because the threshold was already hit.
+- **Structured Output (JSON/Markdown):** High variance can break syntax (e.g., missing quotes or brackets).
+- **Classification Tasks:** You want the model to be decisive, not "creative" about the labels.
+- **Critical Calculations/Facts:** Reducing randomness is essential for grounding.
 
-Why this matters: Top-P adapts. If the model is sure, the pool is small. If the model is confused, the pool grows.
+---
 
-## 4. Interview Corner
+## Interview Questions & Model Answers
 
-1. "Why use Top-P instead of Top-K?"
-   * Answer: Top-P is dynamic. It adjusts the number of candidate words based on how confident the model is. Top-K is a rigid limit that might include nonsense words if the fixed number is too high.
+**Q: What is the difference between Top-P and Top-K sampling?**
+> **Answer:** Top-K is a fixed limit on the number of candidate tokens. Top-P (Nucleus Sampling) is dynamic; it picks tokens whose cumulative probability exceeds a threshold. Top-P is generally superior because it adapts to the model's confidence—if it's very sure of the next word, the pool remains small.
 
-2. "Does a high temperature increase the cost of a request?"
-   * Answer: No. It doesn't change the number of tokens, only which tokens are chosen.
+**Q: Does setting Temperature to 0.0 make the model truly deterministic?**
+> **Answer:** Usually, but not always. While it forces the model to pick the "Greedy" (highest probability) token, GPU non-determinism and model hosting architecture (like MoE) can still lead to slight variations across requests.
 
-3. "What happens if you set temperature to 0.0 in a production chatbot?"
-   * Answer: The bot becomes very predictable and repetitive. This is good for technical tasks but bad for natural conversation.
+**Q: How does `max_tokens` affect the context window?**
+> **Answer:** It doesn't affect the input window, but it acts as a hard ceiling for the **output response**. If reached, the model is forcibly stopped, often mid-sentence. You should always set this to prevent "infinite loop" generation and manage costs.
 
-4. "How does 'max_tokens' affect the model's behavior?"
-   * Answer: It is a hard cutoff. If the model hits the limit mid-sentence, the response just stops.
+---
 
-5. "Describe a scenario where you would use a Temperature of 0.8 but a Top-P of 0.1."
-   * Answer: Top-P 0.1 will likely force the model to pick only the single most likely word, making the high temperature irrelevant.
+## Quick Reference
 
-## 5. Practical Insight
+| Parameter | Recommended (Factual) | Recommended (Creative) | Impact |
+|---|---|---|---|
+| **Temperature** | 0.0 - 0.2 | 0.7 - 1.0 | Controls randomness/entropy |
+| **Top-P** | 0.1 | 0.9 | Controls pool size based on probability |
+| **Top-K** | 1 | 40 - 50 | Limits candidates to a fixed count |
+| **Max Tokens** | 100 - 500 | 1000+ | Limits the length of output |
 
-- The Sweet Spot: Most bots use temperature=0.7 and top_p=0.9.
-- Safety: Always set a max_tokens limit to prevent runaway costs.
-- When NOT to use: Don't use high temperature when outputting structured data like JSON, as it might hallucinate incorrect brackets or quotes.

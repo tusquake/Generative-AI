@@ -1,102 +1,172 @@
-# Generative AI Mastery & Learning Repository
+# Generative AI Engineering Mastery
 
-This repository is a comprehensive learning platform for **Generative AI Engineering**. It combines a systematically structured 50-topic mastery curriculum with production-grade conceptual implementations and standalone AI applications.
-
----
-
-## 🎓 50-Topic Mastery Curriculum
-We are covering 50 critical topics in Generative AI, organized into 10 domains. Each domain contains **Theory** (conceptual guides & interview prep) and **Practice** (Python/JS implementations) co-located within their respective folders.
-
-**Current Progress**: 25/50 Topics Completed (Domains 1-5)
-
-### 🧱 Domain 1: Foundations
-*How LLMs work under the hood.*
-- [x] [01. Architecture Intuition](01_Foundations/Theory/01_Architecture.md)
-- [x] [02. Tokenization & Context Windows](01_Foundations/Theory/02_Tokenization.md)
-- [x] [03. Sampling Parameters](01_Foundations/Theory/03_Sampling_Parameters.md)
-- [x] [04. API Fundamentals](01_Foundations/Theory/04_API_Fundamentals.md)
-- [x] [05. System vs. User Prompts](01_Foundations/Theory/05_System_vs_User.md)
-
-### ✍️ Domain 2: Prompt Engineering
-*Improving output quality via static instructions.*
-- [x] [06. Zero-Shot Prompting](02_Prompt_Engineering/Theory/06_Zero_Shot.md)
-- [x] [07. Few-Shot Prompting](02_Prompt_Engineering/Theory/07_Few_Shot.md)
-- [x] [08. Chain-of-Thought](02_Prompt_Engineering/Theory/08_Chain_of_Thought.md)
-- [x] [09. Self-Correction](02_Prompt_Engineering/Theory/09_Self_Correction.md)
-- [x] [10. Role Prompting](02_Prompt_Engineering/Theory/10_Role_Prompting.md)
-
-### 🧠 Domain 3: Advanced Prompting & Reasoning
-*Advanced logical frameworks for complex problem solving.*
-- [x] [11. Tree of Thoughts](03_Advanced_Prompting/Theory/11_Tree_of_Thoughts.md)
-- [x] [12. ReAct (Reason + Act)](03_Advanced_Prompting/Theory/12_ReAct.md)
-- [x] [13. Directional Stimulus](03_Advanced_Prompting/Theory/13_Directional_Stimulus.md)
-- [x] [14. Program-of-Thoughts](03_Advanced_Prompting/Theory/14_Program_of_Thoughts.md)
-- [x] [15. Automatic Prompt Engineer](03_Advanced_Prompting/Theory/15_Automatic_Prompt_Engineer.md)
-
-### 📂 Domain 4: Data & Context (RAG)
-*Retrieving private data to ground the AI's knowledge.*
-- [x] [16. RAG Fundamentals](04_Data_and_Context/Theory/16_RAG_Fundamentals.md)
-- [x] [17. Vector Databases & Embeddings](04_Data_and_Context/Theory/17_Vector_Databases_and_Embeddings.md)
-- [x] [18. Chunking Strategies](04_Data_and_Context/Theory/18_Chunking_Strategies.md)
-- [x] [19. Context Management](04_Data_and_Context/Theory/19_Context_Management.md)
-- [x] [20. Evaluation & Grounding](04_Data_and_Context/Theory/20_Evaluation_and_Grounding.md)
-
-### 🤖 Domain 5: Agentic Workflows
-*Building autonomous loops that can take actions.*
-- [x] [21. Multi-Agent Systems](05_Agent_Workflows/Theory/21_Multi_Agent_Systems.md)
-- [x] [22. Tool Calling & Function Binding](05_Agent_Workflows/Theory/22_Tool_Calling.md)
-- [x] [23. Memory Management](05_Agent_Workflows/Theory/23_Memory_Management.md)
-- [x] [24. Planning & Plan Execution](05_Agent_Workflows/Theory/24_Planning_and_Execution.md)
-- [x] [25. Agent Reliability & Self-Consistency](05_Agent_Workflows/Theory/25_Agent_Reliability.md)
-
-### 🎨 Domain 6: Multi-Modality
-*Beyond text: Vision, Audio, and Image Generation.*
-- [ ] 26. Vision-Language Models (VLM)
-- [ ] 27. Image Generation (Stable Diffusion/DALL-E)
-- [ ] 28. Audio Synthesis & STT
-- [ ] 29. Video Generation Fundamentals
-- [ ] 30. Specialized Architectures (MoE, State Space)
-
-### 🛡️ Domain 7 - 10: Advanced Topics
-*Fine-tuning, Evaluation, LLMOps, and Future Trends.*
-- [ ] 31. SFT & PEFT (LoRA)
-- [ ] 36. LLM-as-a-Judge
-- [ ] 41. Quantization & Deployment
-- [ ] 50. AGI Roadmap & Ethics
-*(Full list available in the commit history)*
+A comprehensive engineering-focused platform for mastering Generative AI, from LLM fundamentals to production-grade Agentic Workflows and LLMOps.
 
 ---
 
-## 🚀 Standalone Projects & SDKs
-- **[gemini-rag-chatbot/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/gemini-rag-chatbot/)**: Full-stack RAG implementation.
-- **[AI Agent/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/AI%20Agent/)**: Function calling and tool integration demos.
-- **[Cursor/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/Cursor/)**: Agentic workflows for code execution.
-- **[MCP Server/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/MCP%20Server/)**: Model Context Protocol integration.
-- **[OpenAI Agent SDK/](file:///c:/Users/tushar.seth/Desktop/LLD/Generative-AI/OpenAI%20Agent%20SDK/)**: Alternative agent frameworks.
+## Core Philosophy
+
+This repository is designed for engineers who want to go beyond simple prompting. It focuses on the underlying mechanics of Large Language Models (LLMs), retrieval systems, and autonomous agents. Every topic includes detailed theoretical insights and production-ready implementation patterns.
 
 ---
 
-## 🔑 Key Technologies
-- **Models**: Google Gemini 2.0/2.5 Flash, OpenAI.
-- **Vector DBs**: Pinecone, ChromaDB.
-- **Frameworks**: LangChain, AutoGen, CrewAI, MCP.
-- **Languages**: Python, JavaScript (Node.js).
+## Engineering Curriculum
+
+The curriculum is organized into 10 specialized domains covering the entire lifecycle of Generative AI applications.
+
+### Domain 1: Foundations
+*Internal mechanics, scaling, and foundational architectures.*
+
+- [01. Architecture Intuition](01_Foundations/Theory/01_Architecture.md)
+- [02. Tokenization & Context Windows](01_Foundations/Theory/02_Tokenization.md)
+- [03. Sampling Parameters](01_Foundations/Theory/03_Sampling_Parameters.md)
+- [04. API Fundamentals](01_Foundations/Theory/04_API_Fundamentals.md)
+- [05. System vs. User Prompts](01_Foundations/Theory/05_System_vs_User.md)
+- [06. Structured Outputs & JSON Mode](01_Foundations/Theory/06_Structured_Outputs_&_JSON_Mode.md)
 
 ---
 
-## ⚙️ Installation & Setup
+### Domain 2: Prompt Engineering
+*Optimizing model performance through instruction design.*
 
-1.  Clone the repository and install dependencies at the root or within specific project folders.
-2.  Configure your environment:
-    ```bash
-    GOOGLE_API_KEY=your_key_here
-    PINECONE_API_KEY=your_key_here
-    ```
-3.  **Run a Topic**:
-    ```bash
-    # Example: Run a foundations practice script
-    python 01_Foundations/Practice/01_Architecture.py
-    ```
+- [07. Zero-Shot Prompting](02_Prompt_Engineering/Theory/07_Zero_Shot.md)
+- [08. Few-Shot Prompting](02_Prompt_Engineering/Theory/08_Few_Shot.md)
+- [09. Chain-of-Thought](02_Prompt_Engineering/Theory/09_Chain_of_Thought.md)
+- [10. Self-Correction](02_Prompt_Engineering/Theory/10_Self_Correction.md)
+- [11. Role Prompting](02_Prompt_Engineering/Theory/11_Role_Prompting.md)
 
 ---
-*Keep this file updated as we progress through the 50-topic mastery journey.*
+
+### Domain 3: Advanced Reasoning
+*Logic frameworks for complex problem solving.*
+
+- [12. Tree of Thoughts](03_Advanced_Prompting/Theory/12_Tree_of_Thoughts.md)
+- [13. ReAct (Reason + Act)](03_Advanced_Prompting/Theory/13_ReAct.md)
+- [14. Directional Stimulus](03_Advanced_Prompting/Theory/14_Directional_Stimulus.md)
+- [15. Program-of-Thoughts](03_Advanced_Prompting/Theory/15_Program_of_Thoughts.md)
+- [16. Automatic Prompt Engineer](03_Advanced_Prompting/Theory/16_Automatic_Prompt_Engineer.md)
+- [17. Prompt Injection & Security](03_Advanced_Prompting/Theory/17_Prompt_Injection.md)
+
+---
+
+### Domain 4: Data & Context (RAG)
+*Retrieval Augmented Generation for factual grounding.*
+
+- [18. RAG Fundamentals](04_Data_and_Context/Theory/18_RAG_Fundamentals.md)
+- [19. Vector Databases & Embeddings](04_Data_and_Context/Theory/19_Vector_Databases_and_Embeddings.md)
+- [20. Chunking Strategies](04_Data_and_Context/Theory/20_Chunking_Strategies.md)
+- [21. Context Management](04_Data_and_Context/Theory/21_Context_Management.md)
+- [22. Evaluation & Grounding](04_Data_and_Context/Theory/22_Evaluation_and_Grounding.md)
+- [23. Advanced RAG & Reranking](04_Data_and_Context/Theory/23_Advanced_RAG.md)
+
+---
+
+### Domain 5: Agentic Workflows
+*Autonomous loops and multi-agent orchestration.*
+
+- [24. Multi-Agent Systems](05_Agentic_Workflows/Theory/24_Multi_Agent_Systems.md)
+- [25. Tool Calling & Function Binding](05_Agentic_Workflows/Theory/25_Tool_Calling.md)
+- [26. Memory Management](05_Agentic_Workflows/Theory/26_Memory_Management.md)
+- [27. Planning & Plan Execution](05_Agentic_Workflows/Theory/27_Planning_and_Execution.md)
+- [28. Agent Reliability & Self-Consistency](05_Agentic_Workflows/Theory/28_Agent_Reliability.md)
+
+---
+
+### Domain 6: Multimodality
+*Vision, Audio, Video, and cross-modal embeddings.*
+
+- [29. Vision-Language Models (VLM)](06_Multimodality/Theory/29_VLM.md)
+- [30. Image Generation (Stable Diffusion / DALL-E)](06_Multimodality/Theory/30_Image_Generation.md)
+- [31. Audio Synthesis & STT](06_Multimodality/Theory/31_Audio.md)
+- [32. Video Generation Fundamentals](06_Multimodality/Theory/32_Video_Generation.md)
+- [33. Specialized Architectures (MoE, State Space)](06_Multimodality/Theory/33_Architectures.md)
+- [34. Multimodal RAG & Vision Search](06_Multimodality/Theory/34_Multimodal_RAG.md)
+- [35. Embeddings for Retrieval & Analytics](06_Multimodality/Theory/35_Embeddings.md)
+
+---
+
+### Domain 7: Fine-Tuning & Alignment
+*Customizing models for specific behaviors and logic.*
+
+- [36. Fine-Tuning vs. RAG: Strategy Selection](07_Fine_Tuning/Theory/36_Fine_Tuning_vs_RAG.md)
+- [37. RLHF, DPO & Alignment](07_Fine_Tuning/Theory/37_Alignment.md)
+- [38. Supervised Fine-Tuning (SFT)](07_Fine_Tuning/Theory/38_SFT.md)
+- [39. Parameter Efficient Fine-Tuning (PEFT, LoRA)](07_Fine_Tuning/Theory/39_PEFT.md)
+
+---
+
+### Domain 8: Evaluation & Safety
+*Adversarial testing and production guardrails.*
+
+- [40. LLM-as-a-Judge (Automated Evaluation)](08_Evaluation/Theory/40_LLM_as_a_Judge.md)
+- [41. Benchmarking & Red-Teaming](08_Evaluation/Theory/41_Benchmarking.md)
+- [42. Guardrails & Content Safety](08_Evaluation/Theory/42_Guardrails.md)
+- [43. Bias, Fairness & Hallucination](08_Evaluation/Theory/43_Bias_Hallucination.md)
+
+---
+
+### Domain 9: LLMOps & Deployment
+*Optimization, observability, and scaling for production.*
+
+- [44. Quantization & Deployment Strategies](09_LLMOps/Theory/44_Quantization.md)
+- [45. Caching & Latency Optimization](09_LLMOps/Theory/45_Caching.md)
+- [46. Observability & Tracing](09_LLMOps/Theory/46_Observability.md)
+- [47. Cost Optimization & Model Routing](09_LLMOps/Theory/47_Cost_Optimization.md)
+- [48. CI/CD for LLM Applications](09_LLMOps/Theory/48_CICD.md)
+
+---
+
+### Domain 10: Future Trends
+*The roadmap to AGI and emerging scaling paradigms.*
+
+- [49. Frontier Models & Scaling Laws](10_Future/Theory/49_Scaling_Laws.md)
+- [50. AGI Roadmap & Ethics](10_Future/Theory/50_AGI_Ethics.md)
+
+---
+
+## Standalone Projects
+
+- **gemini-rag-chatbot/**: Full-stack implementation of a RAG-based assistant.
+- **AI Agent/**: Function calling and tool integration demos.
+- **Cursor/**: Agentic workflows for code execution.
+- **MCP Server/**: Model Context Protocol integration.
+- **OpenAI Agent SDK/**: Alternative agent framework implementations.
+
+---
+
+## Technology Stack
+
+- **Models**: Google Gemini 1.5/2.0, OpenAI, Anthropic Claude
+- **Orchestration**: LangChain, AutoGen, CrewAI, MCP
+- **Vector Storage**: Pinecone, ChromaDB
+- **Evaluation**: LangSmith, Langfuse, Ragas
+- **Safety**: Llama Guard, NeMo Guardrails
+- **Environment**: Python, Node.js, Docker
+
+---
+
+## Installation and Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/tusquake/Generative-AI.git
+   ```
+
+2. Configure environment variables in a `.env` file:
+   ```env
+   GOOGLE_API_KEY=your_key_here
+   OPENAI_API_KEY=your_key_here
+   ANTHROPIC_API_KEY=your_key_here
+   PINECONE_API_KEY=your_key_here
+   ```
+
+3. Explore a specific topic:
+   ```bash
+   # Example: Run foundation practice
+   python 01_Foundations/Practice/01_Architecture.py
+   ```
+
+---
+
+
+*This curriculum is continuously updated with the latest breakthroughs in the Generative AI landscape.*

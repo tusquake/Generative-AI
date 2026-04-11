@@ -1,19 +1,50 @@
-# Topic 4: API Fundamentals - Calling LLMs and Managing Costs
+# 04. API Fundamentals
 
-## 1. Scenario: Scaling the Newsroom
+> **Mentor note:** Moving from a hobbyist script to a production-grade LLM application requires a shift in mindset. You are no longer just sending text; you are managing costs, handling fluctuating latencies, and building resilience against rate limits. Every millisecond and every token counts when you're scaling to thousands of users.
 
-Imagine you are a developer at a news startup. Initially, you had 10 beta testers, and everything was fine. But this morning, your app went viral, and you now have 10,000 users.
+---
 
-**The Problem:**
-1. Your API costs are skyrocketing.
-2. The AI is taking a long time to respond, making the app feel slow.
-3. Your backend is crashing because the AI provider is telling you to "slow down" (Rate Limits).
+## What You'll Learn
 
-You need to move from "hobbyist" code to "production-grade" API handling.
+- The structure of production-grade LLM API calls
+- How to implement cost tracking and latency monitoring in real-time
+- Strategies for handling API failures and Rate Limits (429 errors)
+- The lifecycle of an LLM request: Prompting, Inference, and Decoding
+- Caching strategies to reduce redundant compute and costs
 
-## 2. Implementation: The Production-Ready Call
+---
 
-This script demonstrates how to call an LLM while calculating cost and handling potential errors.
+## Theory & Intuition
+
+### The Restaurant Analogy
+
+LLM APIs are different from standard CRUD APIs. They are more like ordering at a high-end restaurant where every part of the service is billed separately.
+
+```mermaid
+sequenceDiagram
+    participant App as Your Backend
+    participant API as LLM Provider (OpenAI/Gemini)
+    participant GPU as Inference Engine
+    
+    App->>API: 1. The Order (Input Tokens) - Chef reads your requirements
+    API-->>App: 2. Rate Limit Check (429?) - Is the kitchen full?
+    API->>GPU: 3. Inference - Cooking the response
+    GPU-->>API: 4. Generation (Output Tokens) - Plating the meal
+    API->>App: 5. Response + Usage Metadata - The bill and the food
+```
+
+### Key Production Metrics
+1. **TTFT (Time to First Token):** How long before the user starts seeing text?
+2. **TPS (Tokens Per Second):** How fast does the model "type"?
+3. **Wait time vs. Streaming:** Streaming is non-negotiable for modern UX.
+
+---
+
+## 💻 Code & Implementation
+
+### The Production-Ready API Wrapper
+
+This script demonstrates how to wrap an LLM call with cost tracking, latency monitoring, and error handling.
 
 ```python
 import os
@@ -28,71 +59,70 @@ def production_api_call():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
     model = genai.GenerativeModel('gemini-1.5-flash')
     
-    prompt = "Explain how a microwave works in two sentences."
+    prompt = "Explain why API monitoring is critical for LLMs in 2 sentences."
     
     start_time = time.time()
     
     try:
-        # Call the API
+        # 1. Call the API
         response = model.generate_content(prompt)
         end_time = time.time()
         
-        # Track Usage
+        # 2. Extract usage metadata (The "Bill")
         usage = response.usage_metadata
         in_tokens = usage.prompt_token_count
         out_tokens = usage.candidates_token_count
         
-        # Calculate Cost (Approx rates for Gemini 1.5 Flash)
-        # $0.075 per Million input tokens / $0.30 per Million output tokens
+        # 3. Calculate Cost (Example rates for Gemini 1.5 Flash)
+        # $0.075 / 1M input, $0.30 / 1M output
         cost = (in_tokens * 0.000000075) + (out_tokens * 0.00000030)
         
         print(f"Response: {response.text.strip()}")
         print("-" * 40)
         print(f"Latency: {end_time - start_time:.2f} seconds")
+        print(f"Token Speed: {(in_tokens + out_tokens)/(end_time - start_time):.2f} tokens/sec")
         print(f"Cost: ${cost:.6f}")
-        print(f"Total Tokens: {in_tokens + out_tokens}")
         print("-" * 40)
 
     except Exception as e:
-        print(f"Error occurred: {e}")
+        # In production, use Exponential Backoff for 429 errors
+        print(f"API Error: {e}")
 
 if __name__ == "__main__":
     production_api_call()
 ```
 
-## 3. Concept Breakdown
+> **Senior tip:** Never hardcode your API keys. Use environment variables. Also, set a `timeout` at the application level—LLMs can sometimes hang, and you don't want your server threads stuck forever.
 
-### The Restaurant Analogy
-LLM APIs are not like standard databases. They are like ordering at a high-end restaurant.
-- **The Order (Input Tokens):** You pay for the chef to read your order.
-- **The Meal (Output Tokens):** You pay for the chef to cook the meal. This is usually more expensive.
-- **The Queue (Rate Limit):** If too many people order at once, the kitchen stops taking new orders (Error 429).
+---
 
-**Why this matters:**
-In production, every "word" has a price. If you don't track your token usage, you might get a massive bill at the end of the month.
+## When NOT to Use LLM APIs
 
-**The #1 Mistake:**
-**Not setting timeouts.** LLMs can sometimes take 30+ seconds to respond. If your server waits forever, it will hang and crash for all users.
+- **Sensitive Personal Data (PII):** Unless you have an Enterprise agreement with Zero Data Retention (ZDR), sending PII to a public API is a major security risk.
+- **High-Frequency, Simple Tasks:** If you need to check if a string contains "bad words" 10,000 times a second, use a local keyword filter, not an expensive LLM.
+- **Offline Environments:** If your app needs to work without internet access, you'll need local models (SLMs).
 
-## 4. Interview Corner
+---
 
-1. **"How do you handle a 429 (Rate Limit) error in code?"**
-   - Answer: We use Exponential Backoff. We wait 1 second, then 2, then 4, before trying again. This gives the API provider time to "breathe" without overwhelming them.
+## Interview Questions & Model Answers
 
-2. **"Why is Cost Tracking important at the app level?"**
-   - Answer: LLM providers bill you in bulk. Without app-level tracking, you don't know which specific feature or user is costing you the most money.
+**Q: How do you handle a "429: Rate Limit Exceeded" error in a production pipeline?**
+> **Answer:** We implement **Exponential Backoff with Jitter**. Instead of retrying immediately (which makes the problem worse), we wait for a short period that increases exponentially (1s, 2s, 4s...) and add a small random "jitter" to prevent all clients from retrying at the exact same millisecond (Thundering Herd problem).
 
-3. **"What is the difference between Synchronous and Streaming calls?"**
-   - Answer: Synchronous waits for the whole answer. Streaming gives you the answer word-by-word. Streaming is essential for a good user experience so they don't stare at a loading spinner.
+**Q: Why are output tokens usually significantly more expensive than input tokens?**
+> **Answer:** Input tokens are processed in parallel (pre-fill phase), which is computationally efficient. Output tokens are generated one-by-one (auto-regressive decoding), requiring many separate passes through the model's weights. This takes more time and GPU resources per token.
 
-4. **"How do you reduce costs without switching to a different model?"**
-   - Answer: Prompt Compression. You remove unnecessary words from your instructions to make the "Input" as small as possible.
+**Q: What is "Prompt Compression" and why do we use it?**
+> **Answer:** Prompt compression involves stripping out unnecessary words, redundant instructions, or irrelevant context from the input to reduce token count. This improves latency and significantly reduces costs, especially for RAG systems with long retrieved contexts.
 
-5. **"What is a 'Cold Start' in the context of LLM APIs?"**
-   - Answer: The first request to a model can sometimes be slower as the provider "wakes up" the specialized hardware (TPU/GPU) to handle your request.
+---
 
-## 5. Practical Insight
+## Quick Reference
 
-- **Caching:** If two users ask the same question, save the answer in Redis! Don't pay for the same AI response twice.
-- **Monitoring:** Always log the "Latency per Token". It tells you how fast your AI "types" for your users.
-- **When NOT to use:** Don't use a high-powered LLM for a task that a simple regex or 10 lines of Python can solve.
+| Problem | Production Solution | Metric to Watch |
+|---|---|---|
+| **High Costs** | Semantic Caching (Redis) | Input/Output Token Count |
+| **High Latency** | Streaming & Model Distillation | TTFT (Time to First Token) |
+| **API Instability** | Retries & Model Fallbacks | Success Rate (%) |
+| **Context Limit** | Chunking & Vector Search | Context Coverage |
+

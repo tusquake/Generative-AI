@@ -10,7 +10,7 @@ def explore_tokenization():
     """
     Demonstrates how text is split into tokens using Tiktoken (CL100K) and Gemini.
     """
-    text = "Generative AI is amazing! 🚀"
+    text = "Generative AI is amazing!"
     
     print("="*40)
     print(f"Original Text: {text}")
@@ -41,9 +41,9 @@ def explore_tokenization():
     if api_key:
         try:
             genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-2.0-flash')
             response = model.count_tokens(text)
-            print(f"\n--- Gemini 1.5 Flash Analysis ---")
+            print(f"\n--- Gemini 2.0 Flash Analysis ---")
             print(f"Gemini Total Tokens: {response.total_tokens}")
         except Exception as e:
             print(f"\nGemini counting failed (check API key): {e}")
@@ -53,7 +53,7 @@ def explore_tokenization():
 
     print("\n" + "="*40)
     print("PRACTICAL TAKEAWAY:")
-    print("Notice how '🚀' might consume more than one token depending on the tokenizer.")
+    print("Notice how emojis or special characters might consume more than one token depending on the tokenizer.")
     print("Always calculate tokens before sending to an LLM to manage cost and limits.")
     print("="*40)
 

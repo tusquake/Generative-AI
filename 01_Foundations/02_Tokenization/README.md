@@ -1,4 +1,4 @@
-# 02. Tokenization & Context Windows
+# Tokenization & Context Windows
 
 > **Mentor note:** If compute is the fuel of AI, tokens are the currency. Beginners think in words; experts think in tokens. Mastering tokenization is how you optimize for both cost and performance. If you don't track your tokens, you're flying blind in production.
 
@@ -60,7 +60,7 @@ def explore_tokens():
     print(f"Original: {text}")
     print(f"Token Count: {len(tokens)}")
     print("-" * 30)
-
+ 
     # See how the model actually "sees" the text
     print(f"{'CHUNK':<15} | {'TOKEN ID'}")
     for t_id in tokens:
@@ -105,4 +105,3 @@ if __name__ == "__main__":
 | **Context Window** | Fixed (e.g., 128k) | Limits maximum document length |
 | **Billing** | Input + Output Tokens | You pay for reasoning AND generation |
 | **Optimization** | Prompt Compressing | Save money by removing "fluff" tokens |
-

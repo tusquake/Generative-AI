@@ -22,7 +22,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 - [03. Sampling Parameters](01_Foundations/03_Sampling_Parameters/README.md)
 - [04. API Fundamentals](01_Foundations/04_API_Fundamentals/README.md)
 - [05. System vs. User Prompts](01_Foundations/05_System_vs_User/README.md)
-- [06. Structured Outputs & JSON Mode](01_Foundations/Theory/06_Structured_Outputs_&_JSON_Mode.md)
+- [06. Structured Outputs & JSON Mode](01_Foundations/06_Structured_Outputs/README.md)
 
 ---
 

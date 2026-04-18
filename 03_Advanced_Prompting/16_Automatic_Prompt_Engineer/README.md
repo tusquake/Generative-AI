@@ -1,4 +1,4 @@
-# 16. Automatic Prompt Engineer (APE)
+# Automatic Prompt Engineer (APE)
 
 > **Mentor note:** Human-written prompts are biased and exhausting to maintain. As models evolve from Gemini 1.0 to 1.5, a "perfect" human prompt can suddenly lose 10% accuracy. Automatic Prompt Engineering treats instruction-tuning as a search problem—using an LLM to generate, test, and score thousands of prompt variants to find the one that the target model actually "prefers."
 
@@ -45,14 +45,20 @@ In a full APE system, you would iterate 100+ times. This script shows the "Refin
 
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_ape_refiner_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for fast meta-prompting
+    model_name = "llama-3.1-8b-instant"
 
     original_prompt = "Summarize this data."
     failure_cases = """
@@ -60,7 +66,7 @@ def run_ape_refiner_demo():
     2. Input: [Medical report] -> Output: Hallucinated a diagnosis.
     """
 
-    # ⭐ THE META-PROMPT (The "Prompt Engineer" Persona)
+    # THE META-PROMPT (The "Prompt Engineer" Persona)
     meta_prompt = f"""
     You are an Automatic Prompt Engineer.
     
@@ -73,18 +79,23 @@ def run_ape_refiner_demo():
     """
 
     print("Running APE Refinement Pass...")
-    response = model.generate_content(meta_prompt)
     
-    print("-" * 50)
-    print("OPTIMIZED PROMPT CANDIDATES:")
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": meta_prompt}],
+            temperature=0.7
+        )
+        print("-" * 50)
+        print("OPTIMIZED PROMPT CANDIDATES:")
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_ape_refiner_demo()
 ```
-
-> **Senior tip:** Frameworks like **DSPy** completely replace manual prompting with "Signatures" and "Optimizers." Instead of writing words, you write a data-driven program that "compiles" your prompt for a specific model.
 
 ---
 
@@ -118,4 +129,3 @@ if __name__ == "__main__":
 | **Dataset** | Providing the test cases | The Material |
 | **Evaluator** | Scoring the builder's work | The Inspector |
 | **Fitness Score** | Measuring success (Accuracy, Recall) | The Grade |
-

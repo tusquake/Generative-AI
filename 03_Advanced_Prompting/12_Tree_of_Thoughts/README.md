@@ -1,4 +1,4 @@
-# 12. Tree of Thoughts (ToT)
+# Tree of Thoughts (ToT)
 
 > **Mentor note:** If Chain-of-Thought is a single "script," Tree of Thoughts is a "brainstorming session." LLMs are "greedy" by nature—they pick the most likely next word without considering the long-term consequences. ToT allows the model to explore multiple "parallel universes" of reasoning, evaluate them, and back up if it hits a dead end. Its the closest we get to "look-ahead" search in pure text.
 
@@ -53,14 +53,19 @@ In production, you often use multiple API calls to implement ToT (One to generat
 
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_tot_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    model_name = "llama-3.1-8b-instant"
 
     problem = """
     A startup has $10,000 left in its bank account. 
@@ -71,7 +76,7 @@ def run_tot_demo():
     Which choice ensures the startup survives the next 3 months?
     """
 
-    # ⭐ THE ToT PROMPT: Simulated Expert Discussion
+    # THE ToT PROMPT: Simulated Expert Discussion
     prompt = f"""
     Solve the following problem using a Tree of Thoughts approach:
     
@@ -83,17 +88,22 @@ def run_tot_demo():
     """
 
     print("Running Tree of Thoughts (ToT) Simulation...")
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_tot_demo()
 ```
-
-> **Senior tip:** True "Search-based" ToT usually involves an external script that manages the state of the tree, making a separate API call for every "node" in the graph. This is incredibly powerful but very expensive.
 
 ---
 
@@ -126,4 +136,3 @@ if __name__ == "__main__":
 | **State Evaluation** | Scoring the "fitness" of a path | A Judge/Reviewer |
 | **Search Algorithm** | Deciding which path to follow (BFS/DFS) | A Map/Pathfinder |
 | **Backtracking** | Returning to a previous node after failure | An "Undo" button |
-

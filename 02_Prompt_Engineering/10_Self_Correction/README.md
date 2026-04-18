@@ -1,4 +1,4 @@
-# 10. Self-Correction
+# Self-Correction
 
 > **Mentor note:** LLMs are often better critics than they are creators. When a model acts as a "creator," it is predicting tokens under pressure. When it acts as a "critic," it has the full context of its previous mistakes in front of it. Using a second "critique pass" is the most effective way to eliminate hallucinations and security flaws in AI-generated code.
 
@@ -52,7 +52,8 @@ load_dotenv()
 
 def run_self_correction_demo():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # Step 1: The "Naive" Request (Often ignores edge cases)
     task = "Write a Python function to read 'data.txt' and print each line."
@@ -120,4 +121,3 @@ if __name__ == "__main__":
 | **Cost** | 1x | 2x or 3x |
 | **Edge Case Handling** | Poor | Excellent |
 | **Best For** | Casual chat, simple Q&A | Refactoring, extraction, security checks |
-

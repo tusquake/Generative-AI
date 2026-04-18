@@ -1,4 +1,4 @@
-# 14. Directional Stimulus Prompting (DSP)
+# Directional Stimulus Prompting (DSP)
 
 > **Mentor note:** Generic prompts get generic answers. Directional Stimulus is about providing a "hint" or a "focus anchor" that guides the model's attention mechanism toward specific keywords or sections within a massive block of text. It's the difference between asking for a "summary" and asking to "summarize specifically for a CFO looking for financial risks."
 
@@ -45,16 +45,24 @@ graph LR
 
 ### Building a Dynamic Focus-Mode Summarizer
 
+This script demonstrates how providing "stimulus keywords" forces the model to ignore irrelevant sections of a contract and deep-dive into the specific areas you care about.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_dsp_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for fast extraction
+    model_name = "llama-3.1-8b-instant"
 
     contract_text = """
     SECTION 1: PARTIES. This agreement is between AI Corp and User Inc...
@@ -66,7 +74,7 @@ def run_dsp_demo():
     # We can change this 'stimulus' based on which lawyer is using the app
     current_stimulus = "Termination, cancellation, and notice periods"
 
-    # ⭐ THE DSP PATTERN
+    # THE DSP PATTERN
     prompt = f"""
     Document: {contract_text}
     
@@ -78,17 +86,22 @@ def run_dsp_demo():
     """
 
     print(f"Summarizing with focus on: {current_stimulus}...")
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_dsp_demo()
 ```
-
-> **Senior tip:** In advanced RAG systems (Topic 23), you can use the user's initial search query as the "Directional Stimulus" for the final generation step. This ensures the answer feels relevant to the intent, not just the retrieved text.
 
 ---
 
@@ -109,7 +122,7 @@ if __name__ == "__main__":
 > **Answer:** Absolutely. A common production pattern is a "Two-Step Pipeline": Step 1 uses a small, fast model (like Gemini Flash) to extract 5 key themes from a query. Step 2 passes those themes as a "Directional Stimulus" to a larger model for the final, higher-quality reasoning.
 
 **Q: How does DSP differ from standard role-playing?**
-> **Answer:** Role-playing (Topic 11) changes the **Voice/Tone** of the model. DSP changes the **Focus/Data Retrieval** of the model. You can (and should) use them together: "Act as a CFO (Role) and focus on the payment milestones (Stimulus)."
+> **Answer:** Role-playing changes the **Voice/Tone** of the model. DSP changes the **Focus/Data Retrieval** of the model. You can (and should) use them together: "Act as a CFO (Role) and focus on the payment milestones (Stimulus)."
 
 ---
 
@@ -122,4 +135,3 @@ if __name__ == "__main__":
 | **Best For** | General Q&A, Translation | Legal review, Medical charts, long reports |
 | **Noise Level** | Higher (includes irrelevant bits) | Lower (filters out fluff) |
 | **Implementation** | Static instruction | Dynamic, variable-driven instruction |
-

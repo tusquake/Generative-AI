@@ -33,7 +33,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 - [08. Few-Shot Prompting](02_Prompt_Engineering/08_Few_Shot/README.md)
 - [09. Chain-of-Thought](02_Prompt_Engineering/09_Chain_of_Thought/README.md)
 - [10. Self-Correction](02_Prompt_Engineering/10_Self_Correction/README.md)
-- [11. Role Prompting](02_Prompt_Engineering/Theory/11_Role_Prompting.md)
+- [11. Role Prompting](02_Prompt_Engineering/11_Role_Prompting/README.md)
 
 ---
 

@@ -1,4 +1,4 @@
-# 11. Role Prompting
+# Role Prompting
 
 > **Mentor note:** Role prompting is the art of "skinning" the AI's intelligence. An LLM is a generalist by default; by assigning it a persona (e.g., "Staff Security Engineer" or "Tenured History Professor"), you're forcing it to prioritize a specific lexicon and set of assumptions. It is the fastest way to align tone and depth without fine-tuning.
 
@@ -40,6 +40,8 @@ graph TD
 
 ### Adapting Explanations for Multiple Personas
 
+This script demonstrates how assigning different roles changes the model's explanation of the same technical concept.
+
 ```python
 import os
 import google.generativeai as genai
@@ -49,7 +51,8 @@ load_dotenv()
 
 def run_role_prompting_demo():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     concept = "Microservices Architecture"
 
@@ -105,4 +108,3 @@ if __name__ == "__main__":
 | **Junior / Entry** | New Learners | Concepts, Syntax, "How-to" steps |
 | **End User** | Customers | Benefits, Simplicity, UX |
 | **Adversary** | Security Teams | Vulnerabilities, Edge Cases, Pentesting |
-

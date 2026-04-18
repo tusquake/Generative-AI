@@ -1,4 +1,4 @@
-# 15. Program-of-Thoughts (PoT)
+# Program-of-Thoughts (PoT)
 
 > **Mentor note:** LLMs are linguistic engines, not calculators. Asking an LLM to solve complex compound interest or high-end calculus in plain text is like asking a poet to do your taxes—it might sound beautiful, but the numbers will be wrong. Program-of-Thoughts delegates the "Logic" to Code. The AI writes the script, and the CPU executes it. This is the secret to 100% mathematical accuracy.
 
@@ -41,23 +41,31 @@ graph TD
 
 ### Solving Compound Interest with Code-Generation
 
+This script demonstrates how to force the model to solve a financial problem by writing Python code instead of attempting mental math.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_pot_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for robust code generation
+    model_name = "llama-3.1-8b-instant"
 
     problem = """
     A client has $500. They add $50 every month for 5 years at a 5.5% annual interest rate. 
     Exactly how much do they have at the end of 60 months?
     """
 
-    # ⭐ THE PoT PROMPT: We demand code, not just an answer.
+    # THE PoT PROMPT: We demand code, not just an answer.
     prompt = f"""
     Solve the financial problem below by writing a Python script. 
     The script should:
@@ -69,14 +77,21 @@ def run_pot_demo():
     """
 
     print("Generating Program-of-Thoughts (PoT) Script...")
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print("AI GENERATED CODE:")
-    print(response.text.strip())
-    print("-" * 50)
-    print("\n[Senior Note] In production, you would pass this string to an exec() "
-          "call inside a Docker sandbox to get the numeric answer.")
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.3 # Lower temperature for better code structure
+        )
+        print("-" * 50)
+        print("AI GENERATED CODE:")
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+        print("\n[Senior Note] In production, you would pass this string to an exec() "
+              "call inside a Docker sandbox to get the numeric answer.")
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_pot_demo()
@@ -116,4 +131,3 @@ if __name__ == "__main__":
 | **Complexity** | Simple text chain | Requires Sandbox & Execution |
 | **Best For** | Logic puzzles, broad plans | Finance, Engineering, Data Analysis |
 | **Primary Risk** | Hallucination | Security (Code Execution) |
-

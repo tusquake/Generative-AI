@@ -1,4 +1,4 @@
-# 22. Evaluation & Grounding
+# Evaluation & Grounding
 
 > **Mentor note:** A confident liar is worse than a silent assistant. Grounding is the process of anchoring the AI's response to verifiable facts (the "Context"). Without grounding, a model might tell a user their bank balance is $42,000 based on "vibes" when it's actually $4.20. Evaluation is how we mathematically measure that trust. If you can't measure your RAG system, you can't ship it.
 
@@ -50,16 +50,24 @@ graph TD
 
 ### Implementing Basic Grounding & Citations
 
+This script demonstrates how to force the model to provide evidence for its claims by citing specific documents from the retrieved context.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_grounding_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for grounded generation
+    model_name = "llama-3.1-8b-instant"
 
     # Simulation: Retrieved data from a PDF
     retrieved_data = """
@@ -70,7 +78,7 @@ def run_grounding_demo():
 
     user_query = "Can I return a custom-made t-shirt?"
 
-    # ⭐ THE GROUNDING PROMPT: Strict Citations
+    # THE GROUNDING PROMPT: Strict Citations
     prompt = f"""
     You are a Customer Support Agent. Answer the question ONLY using the provided context.
     
@@ -88,17 +96,22 @@ def run_grounding_demo():
     """
 
     print("Generating Grounded Answer with Citations...")
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0 # Setting to 0.0 minimizes hallucinations
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_grounding_demo()
 ```
-
-> **Senior tip:** For high-stakes apps (Legal/Med), use a **Double-Check Loop**. Have a second LLM take the "Answer" and the "Context" and ask: "Is there anything in the answer that is NOT in the context?" If yes, block the response.
 
 ---
 
@@ -116,13 +129,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is the difference between "Faithfulness" and "Answer Relevance"?**
-> **Answer:** "Faithfulness" measures if the answer is derived strictly from the retrieved context (no hallucinations). "Answer Relevance" measures if the answer actually addresses the user's specific question. A model can be 100% faithful ("I don't know") but 0% relevant (because the user asked for a weather report).
+> **Answer:** "Faithfulness" measures if the answer is derived strictly from the retrieved context (no hallucinations). "Answer Relevance" measures if the answer actually addresses the user's specific question.
 
 **Q: How does "LLM-as-a-Judge" help in evaluation?**
-> **Answer:** Traditional metrics like BLEU or ROUGE are bad at measuring logic. LLM-as-a-Judge uses a superior model (e.g., Gemini 1.5 Pro) to read an answer and a ground truth, then provide a semantic score and reasoning. It's essentially using a "Smarter Model" to grade a "Faster Model."
+> **Answer:** Traditional metrics like BLEU or ROUGE are bad at measuring logic. LLM-as-a-Judge uses a superior model to read an answer and a ground truth, then provide a semantic score and reasoning.
 
 **Q: What is "Context Precision"?**
-> **Answer:** It's a retrieval metric. It asks: "Of all the documents retrieved, how many were actually relevant to answering the question?" If you retrieve 10 documents but only 1 matters, your precision is low (10%), which wastes the model's focus and context window.
+> **Answer:** It's a retrieval metric. It asks: "Of all the documents retrieved, how many were actually relevant to answering the question?"
 
 ---
 
@@ -135,4 +148,3 @@ if __name__ == "__main__":
 | **Recall** | Context vs. Query | High (Found all relevant info) |
 | **Precision** | Context vs. Query | High (Minimal noise retrieved) |
 | **Groundedness**| LLM Judge Check | 1.0 (Strictly sourced) |
-

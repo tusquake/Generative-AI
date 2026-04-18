@@ -1,4 +1,4 @@
-# 07. Zero-Shot Prompting
+# Zero-Shot Prompting
 
 > **Mentor note:** Zero-shot is the "stress test" of an LLM's general reasoning. It's the cheapest, fastest way to prototype, but it relies entirely on the model's pre-existing world knowledge. If a model fails at zero-shot, don't immediately switch models—try adding just one example (one-shot) first.
 
@@ -39,6 +39,8 @@ It is the most cost-efficient way to use LLMs. You save on input tokens because 
 
 ### Sentiment Classification with Zero-Shot
 
+This script demonstrates how to categorize text using a zero-shot approach with Gemini.
+
 ```python
 import os
 import google.generativeai as genai
@@ -48,7 +50,8 @@ load_dotenv()
 
 def run_zero_shot_demo():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # A mixed review that requires nuances
     test_review = "The delivery was lightning fast, but the product arrived broken. Annoying."
@@ -91,7 +94,7 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is the most common failure mode for Zero-Shot prompted models?**
-> **Answer:** Format instability. While the model usually gets the *answer* right, it often adds conversational fluff (e.g., "The answer is Positive") or uses synonyms you didn't ask for ("Bad" instead of "Negative"). Strict instruction and constrained decoding (Topic 06) are the fixes.
+> **Answer:** Format instability. While the model usually gets the *answer* right, it often adds conversational fluff (e.g., "The answer is Positive") or uses synonyms you didn't ask for ("Bad" instead of "Negative"). Strict instruction and constrained decoding are the fixes.
 
 **Q: Why is Zero-Shot prompting cheaper than Few-Shot?**
 > **Answer:** Token cost. Few-shot prompts include examples, which can significantly increase the "Prompt Token" count. In a high-volume pipeline, removing examples can save thousands of dollars per month.
@@ -110,4 +113,3 @@ if __name__ == "__main__":
 | **Consistency** | Variable | High |
 | **Best Model** | Large Frontier Models | Small/Mid-sized Models |
 | **Use Case** | General classification, summary | Niche tasks, strict formatting |
-

@@ -29,7 +29,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 ### Domain 2: Prompt Engineering
 *Optimizing model performance through instruction design.*
 
-- [07. Zero-Shot Prompting](02_Prompt_Engineering/Theory/07_Zero_Shot.md)
+- [07. Zero-Shot Prompting](02_Prompt_Engineering/07_Zero_Shot/README.md)
 - [08. Few-Shot Prompting](02_Prompt_Engineering/Theory/08_Few_Shot.md)
 - [09. Chain-of-Thought](02_Prompt_Engineering/Theory/09_Chain_of_Thought.md)
 - [10. Self-Correction](02_Prompt_Engineering/Theory/10_Self_Correction.md)

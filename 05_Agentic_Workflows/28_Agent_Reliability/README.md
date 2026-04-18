@@ -1,4 +1,4 @@
-# 28. Agent Reliability & Self-Consistency
+# Agent Reliability & Self-Consistency
 
 > **Mentor note:** A prototype agent works 80% of the time; a production agent works 99.9% of the time. The gap between them is "Reliability." Because LLMs are probabilistic, they are prone to random failures, infinite loops, and "State Drift." Building for reliability means implementing guardrails, majority voting, and rigorous observability. Every agent you build should have a "Plan B" by default.
 
@@ -35,7 +35,7 @@ graph TD
     style V1 fill:#dfd,stroke:#333
 ```
 
-**Why it matters:** In a business environment, a single "impulsive" error (like deleting the wrong record) is catastrophic. Majority voting (Topic 28.1) ensures that the "consensus" of three independent reasoning paths is used, which statistically eliminates the most common "random" LLM errors.
+**Why it matters:** In a business environment, a single "impulsive" error (like deleting the wrong record) is catastrophic. Majority voting ensures that the "consensus" of multiple independent reasoning paths is used, which statistically eliminates common "random" LLM errors.
 
 ---
 
@@ -43,39 +43,51 @@ graph TD
 
 ### Implementing Majority Voting for Logic
 
+This script demonstrates the "Self-Consistency" pattern where we run the same logic task multiple times and take the majority consensus to eliminate one-off reasoning errors.
+
 ```python
 import os
-import google.generativeai as genai
 from collections import Counter
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_reliability_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
 
-    # The Logic Task: A complex math or logic problem
-    task = "A train leaves at 3pm traveling 60mph. Another at 4pm at 90mph. When do they meet?"
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant
+    model_name = "llama-3.1-8b-instant"
 
-    # ⭐ STRATEGY: Self-Consistency (Run N=3 times)
+    # The Logic Task: A complex math or logic problem prone to one-off slips
+    task = "A train leaves at 3pm traveling 60mph. Another at 4pm at 90mph. At what time do they meet?"
+
+    # STRATEGY: Self-Consistency (Run N=3 times)
     results = []
+    print(f"Task: {task}")
     print(f"Running 3 independent trials for reliability...")
     
     for i in range(3):
-        # We use a slight temperature to allow for diverse reasoning paths
-        response = model.generate_content(task, generation_config={"temperature": 0.7})
-        results.append(response.text.strip())
-        print(f"Trial {i+1} completed.")
+        # We use a higher temperature to allow for diverse reasoning paths
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": task + " Provide the answer as a single time (e.g. 6pm)."}],
+            temperature=0.7
+        )
+        answer = response.choices[0].message.content.strip()
+        results.append(answer)
+        print(f"Trial {i+1} Output: {answer}")
 
-    # ⭐ STEP: Consensus / Majority Voting
-    # In a real app, you'd extract the final answer (e.g. '6pm') using Regex or JSON
-    # Here we simply count the most frequent response
-    occurence_count = Counter(results)
-    final_consensus = occurence_count.most_common(1)[0][0]
+    # STEP: Consensus / Majority Voting
+    occurrence_count = Counter(results)
+    final_consensus = occurrence_count.most_common(1)[0][0]
 
     print("-" * 50)
-    print(f"Consensus Answer: {final_consensus[:100]}...")
+    print(f"FINAL CONSENSUS: {final_consensus}")
     print("-" * 50)
 
 if __name__ == "__main__":
@@ -91,20 +103,20 @@ if __name__ == "__main__":
 | **Pre-Action** | Input Sanitization | Block malicious or nonsensical queries |
 | **Intra-Action**| Loop Detection | Stop the agent if it's "spinning its wheels" |
 | **Post-Action** | Output Verification | Ensure the JSON matches the expected schema |
-| **Cross-Model** | Judge Agent | Use a larger model (Pro) to grade a smaller model (Flash) |
+| **Cross-Model** | Judge Agent | Use a larger model to grade a smaller model |
 
 ---
 
 ## Interview Questions & Model Answers
 
 **Q: What is "Self-Consistency" and how does it differ from standard CoT?**
-> **Answer:** Chain-of-Thought (CoT) provides a single path of reasoning. Self-Consistency generates *multiple* independent CoT paths and takes the majority vote of the final answers. This is highly effective at catching "calculation slips" where the model understands the logic but makes a small mistake in a single turn.
+> **Answer:** Chain-of-Thought (CoT) provides a single path of reasoning. Self-Consistency generates *multiple* independent CoT paths and takes the majority vote. This catches "calculation slips" where the model understands the logic but makes a small mistake in a single turn.
 
 **Q: How do you handle an agent that enters an "Infinite Loop"?**
-> **Answer:** I implement two triggers: 1. A global `max_turns` limit (e.g., 10 turns). 2. A **Repetition Detector** that hashes the last 3 tool calls; if the hashes are identical, the system assumes the agent is stuck and forces a "Plan Reset" or asks for human intervention.
+> **Answer:** I implement two triggers: 1. A global `max_turns` limit. 2. A **Repetition Detector** that hashes tool calls; if the hashes repeat, the system forces a reset or asks for human intervention.
 
 **Q: Why is "Graceful Degradation" important for enterprise AI?**
-> **Answer:** Enterprise systems often depend on flaky external APIs. If a tool call fails, the agent must not hallucinate a fake result. It should follow a pre-defined path: 1. Retry with an exponential backoff. 2. If it still fails, report the specific error to the user and ask for further instructions instead of "guessing."
+> **Answer:** Enterprise systems depend on external APIs. If a tool call fails, the agent must not hallucinate a fake result. It should retry with an exponential backoff or report the specific error to the user.
 
 ---
 
@@ -117,4 +129,3 @@ if __name__ == "__main__":
 | **Non-Deterministic**| AI potentially giving different answers every time |
 | **Self-Correction** | The model fixing its own error after a feedback loop |
 | **Backoff** | Waiting before retrying a failed tool call |
-

@@ -66,7 +66,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 
 - [24. Multi-Agent Systems (MAS)](05_Agentic_Workflows/24_Multi_Agent_Systems/README.md)
 - [25. Tool Calling & Function Binding](05_Agentic_Workflows/25_Tool_Calling/README.md)
-- [26. Memory Management](05_Agentic_Workflows/Theory/26_Memory_Management.md)
+- [26. Memory Management](05_Agentic_Workflows/26_Memory_Management/README.md)
 - [27. Planning & Plan Execution](05_Agentic_Workflows/Theory/27_Planning_and_Execution.md)
 - [28. Agent Reliability & Self-Consistency](05_Agentic_Workflows/Theory/28_Agent_Reliability.md)
 

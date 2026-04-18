@@ -1,4 +1,4 @@
-# 03. Sampling Parameters
+# Sampling Parameters
 
 > **Mentor note:** Tuning sampling parameters is like adjusting the "creative knobs" of the model. Too high, and the model starts talking nonsense; too low, and it becomes a boring, repetitive robot. For production agents, we usually favor stability (Low Temp) over creativity.
 
@@ -57,7 +57,8 @@ load_dotenv()
 
 def test_sampling():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.0-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.0-flash')
     
     prompt = "The most interesting thing about quantum physics is..."
 
@@ -119,4 +120,3 @@ if __name__ == "__main__":
 | **Top-P** | 0.1 | 0.9 | Controls pool size based on probability |
 | **Top-K** | 1 | 40 - 50 | Limits candidates to a fixed count |
 | **Max Tokens** | 100 - 500 | 1000+ | Limits the length of output |
-

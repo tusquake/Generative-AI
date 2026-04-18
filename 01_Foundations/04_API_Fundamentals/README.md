@@ -1,4 +1,4 @@
-# 04. API Fundamentals
+# API Fundamentals
 
 > **Mentor note:** Moving from a hobbyist script to a production-grade LLM application requires a shift in mindset. You are no longer just sending text; you are managing costs, handling fluctuating latencies, and building resilience against rate limits. Every millisecond and every token counts when you're scaling to thousands of users.
 
@@ -57,7 +57,8 @@ load_dotenv()
 def production_api_call():
     # Setup
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     prompt = "Explain why API monitoring is critical for LLMs in 2 sentences."
     
@@ -125,4 +126,3 @@ if __name__ == "__main__":
 | **High Latency** | Streaming & Model Distillation | TTFT (Time to First Token) |
 | **API Instability** | Retries & Model Fallbacks | Success Rate (%) |
 | **Context Limit** | Chunking & Vector Search | Context Coverage |
-

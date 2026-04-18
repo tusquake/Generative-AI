@@ -19,8 +19,8 @@ The curriculum is organized into 10 specialized domains covering the entire life
 
 - [01. Architecture Intuition](01_Foundations/01_Architecture/README.md)
 - [02. Tokenization & Context Windows](01_Foundations/02_Tokenization/README.md)
-- [03. Sampling Parameters](01_Foundations/Theory/03_Sampling_Parameters.md)
-- [04. API Fundamentals](01_Foundations/Theory/04_API_Fundamentals.md)
+- [03. Sampling Parameters](01_Foundations/03_Sampling_Parameters/README.md)
+- [04. API Fundamentals](01_Foundations/04_API_Fundamentals/README.md)
 - [05. System vs. User Prompts](01_Foundations/Theory/05_System_vs_User.md)
 - [06. Structured Outputs & JSON Mode](01_Foundations/Theory/06_Structured_Outputs_&_JSON_Mode.md)
 

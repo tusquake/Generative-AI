@@ -3,10 +3,10 @@
 
 import google.generativeai as genai
 import os
+import time
 from dotenv import load_dotenv
 
 # 1. Load your API key from a .env file
-# Create a .env file with GEMINI_API_KEY=your_key_here
 load_dotenv()
 
 def explore_sampling_configs():
@@ -19,7 +19,8 @@ def explore_sampling_configs():
         return
 
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     prompt = "Write a one-sentence catchphrase for a futuristic coffee shop."
 
@@ -27,7 +28,7 @@ def explore_sampling_configs():
     # Low temperature = predictable, safe, repetitive.
     strict_config = genai.types.GenerationConfig(
         temperature=0.0,
-        max_symbols=50 # Stop after a short amount
+        max_output_tokens=50 
     )
 
     # --- CONFIG 2: The 'Creative' Bot ---
@@ -43,21 +44,28 @@ def explore_sampling_configs():
     print("-" * 50)
 
     print("\n[STRICT BOT - Temp 0.0]")
-    # Generate 3 times to see if it changes
-    for i in range(3):
-        response = model.generate_content(prompt, generation_config=strict_config)
-        print(f"Try {i+1}: {response.text.strip()}")
+    # Changed to 1 try as requested (usually 3 to show determinism)
+    for i in range(1):
+        try:
+            response = model.generate_content(prompt, generation_config=strict_config)
+            print(f"Output: {response.text.strip()}")
+        except Exception as e:
+            print(f"Request failed: {e}")
+        time.sleep(1)
 
     print("\n[CREATIVE BOT - Temp 1.0]")
-    # Generate 3 times to see the variation
-    for i in range(3):
-        response = model.generate_content(prompt, generation_config=creative_config)
-        print(f"Try {i+1}: {response.text.strip()}")
+    # Changed to 1 try as requested (usually 3 to show variation)
+    for i in range(1):
+        try:
+            response = model.generate_content(prompt, generation_config=creative_config)
+            print(f"Output: {response.text.strip()}")
+        except Exception as e:
+            print(f"Request failed: {e}")
+        time.sleep(1)
 
     print("\n" + "-" * 50)
     print("ENGINEERING INSIGHT:")
-    print("Notice how the 'Strict' bot likely gave the exact same answer 3 times,")
-    print("while the 'Creative' bot explored different ideas.")
+    print("Sampling parameters control the trade-off between stability and creativity.")
     print("-" * 50)
 
 if __name__ == "__main__":

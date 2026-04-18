@@ -1,4 +1,4 @@
-# 09. Chain-of-Thought (CoT)
+# Chain-of-Thought (CoT)
 
 > **Mentor note:** LLMs are famously bad at multi-step math and logic because they try to "predict" the answer instantly. Chain-of-Thought is the "scratchpad" for the AI. By forcing it to write out its reasoning, you aren't just getting better transparency—you're literally making the model smarter by giving it a mathematical "memory" for its own intermediate steps.
 
@@ -46,6 +46,8 @@ graph TD
 
 ### Solving Logistics Puzzles with Step-by-Step Logic
 
+This script demonstrates how to force the model to reason through a multi-step inventory problem.
+
 ```python
 import os
 import google.generativeai as genai
@@ -55,7 +57,8 @@ load_dotenv()
 
 def run_cot_demo():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # A complex multi-step inventory problem
     problem = """
@@ -67,7 +70,7 @@ def run_cot_demo():
     How many units are in the warehouse now?
     """
 
-    # ⭐ THE CoT PROMPT: We demand the thinking process.
+    # THE CoT PROMPT: We demand the thinking process.
     prompt = f"""
     Solve the inventory problem below. 
     IMPORTANT: Think through this STEP-BY-STEP. List your calculations for each step level.
@@ -87,8 +90,6 @@ if __name__ == "__main__":
     run_cot_demo()
 ```
 
-> **Senior tip:** If you are using a smaller model (like Llama-3 8B), they can sometimes "reason correctly" but still fail the final arithmetic. For high-stakes math, use CoT to generate code, then execute that code in a sandbox (Topic 25: Tool Calling).
-
 ---
 
 ## When NOT to Use Chain-of-Thought
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: Explain the "Zero-Shot CoT" phenomenon.**
-> **Answer:** Zero-shot CoT was discovered in a famous paper where Researchers found that simply appending the phrase "Let's think step by step" to a prompt dramatically improved performance on math benchmarks, even without providing any manual examples. It activates the model's latent reasoning capabilities.
+> **Answer:** Zero-shot CoT was discovered in a famous paper where researchers found that simply appending the phrase "Let's think step by step" to a prompt dramatically improved performance on math benchmarks, even without providing any manual examples. It activates the model's latent reasoning capabilities.
 
 **Q: How do you handle "Hallucinated Reasoning" in CoT responses?**
 > **Answer:** This often happens in smaller models where the "thinking" looks logical but 1+1 equals 3. Solution: Use "Self-Consistency" (Topic 28), where you generate 5 CoT responses at a high temperature and pick the "Final Result" that appears most often.
@@ -121,4 +122,3 @@ if __name__ == "__main__":
 | **Token Cost** | Cheap | Expensive (Pays for reasoning) |
 | **Best For** | Fact retrieval, chat | Math, Logic, Multi-step plans |
 | **Trigger phrase** | "What is..." | "Think step-by-step..." |
-

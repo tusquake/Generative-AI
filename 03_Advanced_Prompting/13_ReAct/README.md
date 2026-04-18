@@ -1,4 +1,4 @@
-# 13. ReAct (Reason + Act)
+# ReAct (Reason + Act)
 
 > **Mentor note:** ReAct is the foundation of modern AI Agents. Without it, an AI is just a "mouth" that can't "do" anything. By interleaving reasoning steps (Thoughts) with tool calls (Actions), we create a system that can interact with the real world, observe the results, and self-correct on the fly. It turns a static model into a dynamic engine.
 
@@ -50,18 +50,23 @@ In a production system, you would stop generation after the `Action:` tag, run y
 
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_react_simulation():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    model_name = "llama-3.1-8b-instant"
 
     problem = "What is the account balance for user@example.com? If it's over $500, suggest a savings plan."
 
-    # ⭐ THE ReAct TEMPLATE
+    # THE ReAct TEMPLATE
     prompt = f"""
     Solve the following problem. Use the following format:
     Thought: Explain why you are performing the next action.
@@ -76,18 +81,22 @@ def run_react_simulation():
     """
 
     print("Running ReAct Agent Simulation...")
-    # Note: In reality, this is a multi-turn conversation.
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_react_simulation()
 ```
-
-> **Senior tip:** Implementing ReAct from scratch is a great learning exercise, but in production, use frameworks like **LangGraph** or **CrewAI**. They handle the "Pause-Run-Resume" logic and state management for you.
 
 ---
 
@@ -121,4 +130,3 @@ if __name__ == "__main__":
 | **Observation** | Reality Check| The tool's output; never hallucinate it |
 | **Final Answer** | Conclusion | Terminate the loop |
 | **Iteration** | Turn | Cap at 5-10 to prevent cost spikes |
-

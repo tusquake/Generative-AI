@@ -41,7 +41,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 *Logic frameworks for complex problem solving.*
 
 - [12. Tree of Thoughts](03_Advanced_Prompting/12_Tree_of_Thoughts/README.md)
-- [13. ReAct (Reason + Act)](03_Advanced_Prompting/Theory/13_ReAct.md)
+- [13. ReAct (Reason + Act)](03_Advanced_Prompting/13_ReAct/README.md)
 - [14. Directional Stimulus](03_Advanced_Prompting/Theory/14_Directional_Stimulus.md)
 - [15. Program-of-Thoughts](03_Advanced_Prompting/Theory/15_Program_of_Thoughts.md)
 - [16. Automatic Prompt Engineer](03_Advanced_Prompting/Theory/16_Automatic_Prompt_Engineer.md)

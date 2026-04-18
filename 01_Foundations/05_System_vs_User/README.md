@@ -1,4 +1,4 @@
-# 05. System vs. User Prompts
+# System vs. User Prompts
 
 > **Mentor note:** Think of the System Prompt as the "Constitution" of your AI application and the User Prompt as the "Trial." If you don't define clear constitutional rules, your AI will be easily swayed by adversarial users. For production apps, the goal is to make the System Prompt invisible but invincible.
 
@@ -44,6 +44,8 @@ By giving the AI a "Role" (System Prompt) *before* it interacts with the user, y
 
 ### Enforcing a Rigid Persona with Gemini
 
+This script demonstrates how to use the `system_instruction` parameter to lock a model into a specific technical persona.
+
 ```python
 import os
 import google.generativeai as genai
@@ -62,8 +64,9 @@ def run_system_prompt_demo():
     Always provide a Big-O complexity analysis for every code snippet.
     """
 
+    # Using gemini-2.5-flash for latest compatibility
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-2.5-flash",
         system_instruction=system_rules
     )
 
@@ -112,4 +115,3 @@ if __name__ == "__main__":
 | **System** | Developer | Permanent (Context-wide) | Guidelines, Persona, Safety, Rules |
 | **User** | End-User | Ephemeral (Turn-based) | Specific tasks, Questions, Data |
 | **Assistant** | Model | Historical | Conversational history, Context |
-

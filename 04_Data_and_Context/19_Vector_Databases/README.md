@@ -1,4 +1,4 @@
-# 19. Vector Databases & Embeddings
+# Vector Databases & Embeddings
 
 > **Mentor note:** Computers don't understand "vibe." They understand numbers. Embeddings are the bridge that turns human semantic meaning (e.g., "Seattle is rainy") into high-dimensional coordinates in a mathematical map. A Vector Database is the highly-optimized "Librarian" that can search this map to find the points closest to your query in milliseconds. It is the "Soul" of retrieval.
 
@@ -48,34 +48,40 @@ graph LR
 
 ## 💻 Code & Implementation
 
-### Generating Embeddings with Gemini
+### Local Semantic Similarity Demo
+
+This script uses a local embedding model to calculate the semantic similarity between different sentences.
 
 ```python
-import os
-import google.generativeai as genai
-from dotenv import load_dotenv
-
-load_dotenv()
+import numpy as np
+from sentence_transformers import SentenceTransformer
 
 def run_embeddings_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    
-    # ⭐ TIP: Use the latest embedding model ('text-embedding-004')
-    text = "Artificial Intelligence is the simulation of human intelligence by machines."
-    
-    result = genai.embed_content(
-        model="models/text-embedding-004",
-        content=text,
-        task_type="retrieval_document"
-    )
+    # Load a lightweight local embedding model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    vector = result['embedding']
-    
-    print(f"Text: {text}")
-    print(f"Vector Length: {len(vector)}")
-    print(f"First 5 dimensions: {vector[:5]}")
+    sentences = [
+        "The weather is beautiful today.",
+        "It's a sunny and lovely day outside.",
+        "Artificial Intelligence is changing the world.",
+        "Deep learning models require massive data."
+    ]
+
+    print("Generating embeddings for sentences...")
+    embeddings = model.encode(sentences)
+
+    def cosine_similarity(v1, v2):
+        return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+
     print("-" * 50)
-    print("[Senior Note] These numbers represent the semantic fingerprint of your text.")
+    # Compare Sentence 1 and 2 (Similar)
+    score_1 = cosine_similarity(embeddings[0], embeddings[1])
+    print(f"Similarity (Weather vs. Sunny): {score_1:.4f}")
+
+    # Compare Sentence 1 and 3 (Different)
+    score_2 = cosine_similarity(embeddings[0], embeddings[2])
+    print(f"Similarity (Weather vs. AI): {score_2:.4f}")
+    print("-" * 50)
 
 if __name__ == "__main__":
     run_embeddings_demo()
@@ -96,13 +102,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: Why can't I just use a regular SQL database with `LIKE %query%` for RAG?**
-> **Answer:** Keyword search (SQL) only finds exact character matches. If I search for "How to fix a flat tire," and the document says "Steps for repairing a punctured wheel," SQL finds nothing. A Vector DB understands that those two sentences are semantically adjacent in the high-dimensional space and will retrieve the correct document.
+> **Answer:** Keyword search (SQL) only finds exact character matches. If I search for "How to fix a flat tire," and the document says "Steps for repairing a punctured wheel," SQL finds nothing. A Vector DB understands that those two sentences are semantically adjacent in the high-dimensional space.
 
 **Q: What is "Approximate Nearest Neighbor" (ANN)?**
-> **Answer:** In a database of 1 billion vectors, checking every single point for every query (Brute Force) is O(n) and too slow. ANN algorithms (like HNSW or IVF) create a "search index" that navigates the map more efficiently, sacrificing a tiny bit of precision for massive speed gains.
+> **Answer:** In a database of 1 billion vectors, checking every single point (Brute Force) is too slow. ANN algorithms (like HNSW) create a "search index" that navigates the map more efficiently, sacrificing a tiny bit of precision for massive speed gains.
 
 **Q: Does a Vector Database store the actual text of the PDF?**
-> **Answer:** Usually, yes, but it stores it as **Metadata**. The database's primary structure tracks the Vectors (indices). Once the closest vector is found, it looks up the associated "Metadata" string to return the original text to the LLM.
+> **Answer:** Usually, yes, but it stores it as **Metadata**. Once the closest vector is found, the database looks up the associated "Metadata" string to return the original text to the LLM.
 
 ---
 
@@ -111,8 +117,7 @@ if __name__ == "__main__":
 | Term | Purpose | Analog |
 |---|---|---|
 | **Embedding** | Converting text to numbers | A Fingerprint |
-| **Dimension** | The size of the vector list (e.g., 768) | Level of Nuance |
+| **Dimension** | The size of the vector list (e.g., 384) | Level of Nuance |
 | **Vector DB** | Optimized storage for similarity search| The Librarian |
 | **HNSW** | A popular indexing algorithm for speed | A Map Index |
 | **Metadata** | The original text/source info | The Back of the Book |
-

@@ -1,4 +1,4 @@
-# 20. Chunking Strategies
+# Chunking Strategies
 
 > **Mentor note:** You can't fit a 500-page novel into a 128k context window without losing focus. Chunking is the process of breaking massive datasets into "digestible" segments. If your chunks are too small, the AI loses the plot (Missing Context). If they are too large, the AI gets distracted by the fluff (Noise). Masterful chunking is the difference between a RAG system that works and one that just "hallucinates with confidence."
 
@@ -42,7 +42,7 @@ graph TD
     style Spl fill:#f9f,stroke:#333
 ```
 
-**Why it matters:** Recursive splitting (Topic 2.1) ensures we don't break sentences or paragraphs in half, keeping the "meaning" of the chunk intact for the embedding model.
+**Why it matters:** Recursive splitting ensures we don't break sentences or paragraphs in half, keeping the "meaning" of the chunk intact for the embedding model.
 
 ---
 
@@ -50,10 +50,9 @@ graph TD
 
 ### A Basic Recursive Character Splitter
 
-While libraries like LangChain exist, understanding the logic is key for senior engineers.
+This script demonstrates the logic of a recursive splitter that prioritizes breaking at newlines and spaces to keep thematic coherence.
 
 ```python
-import os
 from typing import List
 
 def recursive_chunk_text(text: str, chunk_size: int, overlap: int) -> List[str]:
@@ -89,13 +88,21 @@ def recursive_chunk_text(text: str, chunk_size: int, overlap: int) -> List[str]:
 
     return chunks
 
-# Example Usage
-my_text = "This is a long document about AI.\n\nIt has multiple paragraphs.\nWe need to split it."
-chunks = recursive_chunk_text(my_text, chunk_size=40, overlap=10)
-
-print(f"Generated {len(chunks)} chunks.")
-for i, c in enumerate(chunks):
-    print(f"[{i}]: {c}")
+if __name__ == "__main__":
+    my_text = """
+    Generative AI is a type of artificial intelligence.
+    It can create new content, such as text, images, or code.
+    
+    RAG (Retrieval Augmented Generation) is a popular architecture.
+    It combines retrieval with generation to provide grounded answers.
+    """
+    
+    # Using small size for demo purposes
+    chunks = recursive_chunk_text(my_text, chunk_size=60, overlap=15)
+    
+    print(f"Generated {len(chunks)} chunks.")
+    for i, c in enumerate(chunks):
+        print(f"[{i}]: {c}")
 ```
 
 > **Senior tip:** For codebases (Python/JS), use specialized splitters that understand class and function boundaries. A chunk should never start in the middle of an `if` statement.
@@ -106,20 +113,20 @@ for i, c in enumerate(chunks):
 
 - **Fact-Dense Docs:** In a spreadsheet-like CSV, every row is a standalone fact. Use very small chunks (1 row per chunk).
 - **Latency-Sensitive Apps:** More tokens in a chunk = more money spent and slower generation times.
-- **Reranking Pipelines (Topic 23):** If you use a reranker, smaller chunks often perform better as the reranker can handle the density more effectively than a raw LLM.
+- **Reranking Pipelines:** If you use a reranker, smaller chunks often perform better as the reranker can handle the density more effectively than a raw LLM.
 
 ---
 
 ## Interview Questions & Model Answers
 
 **Q: What is the downside of a "Sliding Window" (Overlap)?**
-> **Answer:** It increases storage costs and API costs for embedding. If you have a 20% overlap, you are paying for 20% more vectors and 20% more storage. It also introduces redundancy in search results; you might retrieve two chunks that share the same answer, wasting precious context window space.
+> **Answer:** It increases storage costs and API costs for embedding. If you have a 20% overlap, you are paying for 20% more vectors. It also introduces redundancy in search results; you might retrieve two chunks that share the same answer, wasting context window space.
 
 **Q: How do you choose the "Optimal" Chunk size?**
-> **Answer:** It is an empirical task. Generally, **512 tokens** is the "Goldilocks" zone for most models. However, you must use **A/B Testing** (or an Eval set): test your RAG accuracy with 256, 512, and 1024 sizes and measure which one yields the highest retrieval recall and generation accuracy.
+> **Answer:** It is an empirical task. Generally, **512 tokens** is a safe default. However, you should use **A/B Testing**: test your RAG accuracy with different sizes and measure which one yields the highest retrieval recall.
 
 **Q: What is "Semantic Chunking"?**
-> **Answer:** Instead of splitting by character count, the system uses an embedding model to calculate the similarity between consecutive sentences. When the "Similarity Score" drops below a threshold, it assumes the topic has changed and creates a new chunk. This ensures high thematic cohesion.
+> **Answer:** Instead of splitting by character count, the system uses an embedding model to calculate similarity between consecutive sentences. When similarity drops below a threshold, it assumes a topic change and creates a new chunk.
 
 ---
 
@@ -127,9 +134,8 @@ for i, c in enumerate(chunks):
 
 | Splitter Type | Logic | Best For |
 |---|---|---|
-| **Fixed-Size** | Every X characters | Simple tests, non-text data |
+| **Fixed-Size** | Every X characters | Simple tests |
 | **Recursive Char** | Split by \n\n, \n, " " | Standard Documents (Word, PDF) |
-| **Markdown** | Split by Headers (#, ##) | Documentation, Wikis |
+| **Markdown** | Split by Headers (#) | Documentation, Wikis |
 | **Code** | Split by Class/Def | Software Repositories |
 | **Semantic** | Split by Topic Change | Academic papers, dense reports |
-

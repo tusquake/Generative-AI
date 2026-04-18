@@ -1,4 +1,4 @@
-# 29. Vision-Language Models (VLM)
+# Vision-Language Models (VLM)
 
 > **Mentor note:** LLMs are no longer just "text-in, text-out." Vision-Language Models (VLMs) like Gemini 1.5 and GPT-4o have unified architectures where images are treated as "visual tokens." This allows the model to "see" a chart, a surgical video, or a satellite image and reason about it with the same logic it applies to text. For an engineer, this means you can now build RAG systems that search over images and AI agents that can "navigate" a web UI visually.
 
@@ -37,13 +37,15 @@ graph LR
     style Tokens fill:#bbf,stroke:#333
 ```
 
-**Why it matters:** Because images and text share the same high-dimensional space (Topic 19), the model can follow instructions like "Find the error in this circuit diagram" as naturally as "Find the error in this Python code."
+**Why it matters:** Because images and text share the same high-dimensional space, the model can follow instructions like "Find the error in this circuit diagram" as naturally as "Find the error in this Python code."
 
 ---
 
 ## 💻 Code & Implementation
 
 ### Visual Reasoning with Gemini 1.5
+
+This script demonstrates how to pass an image and a text prompt to Gemini to perform "Visual Reasoning."
 
 ```python
 import os
@@ -54,35 +56,50 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def run_vlm_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    # Setup Gemini
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        print("Error: GOOGLE_API_KEY not found in .env")
+        return
+        
+    genai.configure(api_key=api_key)
+    # Gemini 1.5 Flash is highly optimized for multimodal tasks
     model = genai.GenerativeModel('gemini-1.5-flash')
 
-    # Load an image (make sure you have an image file in your path)
-    # img = PIL.Image.open('path/to/your/image.jpg')
+    # Path to the image file
+    image_path = 'vision_sample.jpg'
     
-    # Simulating a multimodal prompt
-    # In a real app, you'd pass [prompt, img]
+    if not os.path.exists(image_path):
+        print(f"Error: {image_path} not found. Please ensure the image exists.")
+        return
+
+    print(f"Opening image: {image_path}...")
+    img = PIL.Image.open(image_path)
+
     prompt = """
-    Look at this image of a nutrition label. 
-    1. Extract the total calories per serving.
-    2. Is this product suitable for someone on a low-sodium diet?
+    Analyze this image and provide:
+    1. A concise description of the scene.
+    2. Any text or numerical data visible.
+    3. An assessment of the mood or atmosphere.
     """
 
-    print("Running Visual Reasoning task...")
-    # response = model.generate_content([prompt, img])
+    print("Running Visual Reasoning task with Gemini...")
     
-    # Note: For this demo, we'll simulate the output
-    print("-" * 50)
-    print("AI Visual Output (Simulated):")
-    print("1. Total Calories: 250 kcal per serving.")
-    print("2. Low-Sodium: No. This product contains 480mg of sodium (20% DV).")
-    print("-" * 50)
+    try:
+        # We pass both the text and the image object in a list
+        response = model.generate_content([prompt, img])
+        
+        print("-" * 50)
+        print("GEMINI VISION OUTPUT:")
+        print("-" * 25)
+        print(response.text.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during vision generation: {e}")
 
 if __name__ == "__main__":
     run_vlm_demo()
 ```
-
-> **Senior tip:** When using VLMs for production, provide **Spatial Hints**. If you want the AI to look at a specific button on a screen, describe its position (e.g., "the blue button in the top-right corner") to improve accuracy.
 
 ---
 
@@ -94,20 +111,19 @@ if __name__ == "__main__":
 | **Logic** | None (Just strings) | High (Reasoning about data) |
 | **Layout** | Often broken | Preserved (Spatial understanding)|
 | **Format** | Plain Text | JSON / Markdown / Tables |
-| **Speed** | Extremely Fast | Moderate |
 
 ---
 
 ## Interview Questions & Model Answers
 
 **Q: How does a VLM represent an image internally?**
-> **Answer:** It uses a "projector" or a "Vision Encoder" (like a ViT) to map the image into the same embedding space as the text. The image is flattened into a sequence of "visual tokens." To the Transformer's attention mechanism, these tokens are just another part of the input sequence, similar to words.
+> **Answer:** It uses a "Vision Encoder" (like a ViT) to map the image into the same embedding space as the text. The image is flattened into a sequence of "visual tokens." To the Transformer, these tokens are just another part of the input sequence.
 
 **Q: What is "Hallucination" in a VLM context?**
-> **Answer:** It's when the AI "sees" things that aren't there—for example, reading a "9" on a blurry label as an "8," or hallucinating a signature on a document. This is often caused by the model's text-based priors (Topic 1) overpowering the visual signal.
+> **Answer:** It's when the AI "sees" things that aren't there—for example, reading a "9" on a blurry label as an "8." This is often caused by the model's text-based priors overpowering the visual signal.
 
 **Q: Why is "Multimodal RAG" becoming important?**
-> **Answer:** Most enterprise data isn't just text; it's PDFs with charts, PowerPoint slides, and screenshots. Multimodal RAG allows us to embed both text and images into a shared vector space, enabling users to search for "The chart showing Q3 revenue growth" and retrieve the exact image.
+> **Answer:** Most enterprise data is in PDFs with charts and screenshots. Multimodal RAG allows us to embed both text and images into a shared vector space, enabling users to search for "The chart showing Q3 revenue growth."
 
 ---
 

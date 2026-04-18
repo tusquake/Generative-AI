@@ -4,3 +4,4 @@ tiktoken
 numpy
 groq
 requests
+Pillow

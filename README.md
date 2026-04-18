@@ -55,7 +55,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 - [18. RAG Fundamentals](04_Data_and_Context/18_RAG_Fundamentals/README.md)
 - [19. Vector Databases & Embeddings](04_Data_and_Context/19_Vector_Databases/README.md)
 - [20. Chunking Strategies](04_Data_and_Context/20_Chunking_Strategies/README.md)
-- [21. Context Management](04_Data_and_Context/Theory/21_Context_Management.md)
+- [21. Context Management](04_Data_and_Context/21_Context_Management/README.md)
 - [22. Evaluation & Grounding](04_Data_and_Context/Theory/22_Evaluation_and_Grounding.md)
 - [23. Advanced RAG & Reranking](04_Data_and_Context/Theory/23_Advanced_RAG.md)
 

@@ -1,6 +1,6 @@
-# 23. Advanced RAG & Reranking
+# Advanced RAG & Reranking
 
-> **Mentor note:** Vanilla RAG (Topic 18) rarely meets the "production bar." In a real-world system, your Vector DB might return a chunk that has the right keywords but isn't actually useful. Advanced RAG introduced "Reranking" (a second, smarter pass over retrieval), "HyDE" (simulating a perfect answer before searching), and "Hybrid Search" (combining keyword and vector logic). It is the difference between a prototype and a product.
+> **Mentor note:** Vanilla RAG (Topic 18) rarely meets the "production bar." In a real-world system, your Vector DB might return a chunk that has the right keywords but isn't actually useful. Advanced RAG introduces "Reranking" (a second, smarter pass over retrieval), "HyDE" (simulating a perfect answer before searching), and "Hybrid Search" (combining keyword and vector logic). It is the difference between a prototype and a product.
 
 ---
 
@@ -37,7 +37,7 @@ graph TD
     style Final fill:#bbf,stroke:#333
 ```
 
-**Why it matters:** Vector similarity (Topic 19) is based on general semantic distance. A Reranker is much "smarter" but slower, which is why we only run it on the top ~50 results instead of the billion-vector database.
+**Why it matters:** Vector similarity is based on general semantic distance. A Reranker is much "smarter" but slower, which is why we only run it on the top ~50 results instead of the billion-vector database.
 
 ---
 
@@ -45,20 +45,28 @@ graph TD
 
 ### Simulating a Reranking Workflow
 
+This script demonstrates the "Reranking Pass" where an LLM acts as a Cross-Encoder to re-order retrieved documents based on their actual relevance to the user's query.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_advanced_rag_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant to act as a fast auditor
+    model_name = "llama-3.1-8b-instant"
 
     query = "What are the rules for returning custom t-shirts?"
 
-    # Simulation of diverse (noisy) retrieval results
+    # Simulation of diverse (noisy) retrieval results from a Vector DB
     candidates = [
         "Document A: Refunds for standard items are 30 days.",
         "Document B: Our t-shirts are made of 100% organic cotton.",
@@ -66,25 +74,31 @@ def run_advanced_rag_demo():
         "Document D: We shipping globally from our warehouse in Texas."
     ]
 
-    # ⭐ THE RERANKING PROMPT (Acting as a Cross-Encoder)
+    # THE RERANKING PROMPT (Simulated Cross-Encoder)
     rerank_prompt = f"""
     You are a Reranking Auditor.
     Query: {query}
     Candidates:
     {candidates}
 
-    Task: Re-order these candidates from 1 to 4 based on how likely they are 
-    to contain the direct answer. Provide ONLY the re-ordered indices.
+    Task: Re-order these candidates from most relevant to least relevant based 
+    on the query. 
+    Explain your top choice.
     """
 
     print("Executing Reranking Pass (Simulated Cross-Encoder)...")
-    response = model.generate_content(rerank_prompt)
     
-    print("-" * 50)
-    print(f"Original Order: [0, 1, 2, 3]")
-    print(f"Reranked Order: {response.text.strip()}")
-    print("-" * 50)
-    print("[Senior Note] In production, use Cohere Rerank or BGE-Reranker for this step.")
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": rerank_prompt}],
+            temperature=0.0
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_advanced_rag_demo()
@@ -107,13 +121,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: Why is "Hybrid Search" often better than pure Vector Search?**
-> **Answer:** Vector search is great for meaning but bad at exact names (e.g., "Model X-501"). Keyword search (BM25) is excellent at specific IDs and acronyms. By combining them (Reciprocal Rank Fusion), you ensure the system respects technical names while also understanding natural language.
+> **Answer:** Vector search is great for meaning but bad at exact names (e.g., "Model X-501"). Keyword search (BM25) is excellent at specific IDs and acronyms. Combining them ensures the system respects technical names while also understanding natural language.
 
 **Q: How does HyDE (Hypothetical Document Embeddings) work?**
-> **Answer:** Instead of embedding the user's *question* (which is short and sparse), we ask an LLM to "Generate a hypothetical perfect answer." We then embed that *answer* and search for documents similar to it. This produces a much stronger "signal" in the vector space than searching for the question itself.
+> **Answer:** Instead of embedding the user's question, we ask an LLM to "Generate a hypothetical perfect answer." We then embed that answer and search for documents similar to it. This produces a much stronger "signal" in the vector space.
 
 **Q: When should you implement a Reranker?**
-> **Answer:** When your Vector DB is returning irrelevant documents in the top 5, or when "faithfulness" is low because the LLM is getting distracted by noisy chunks. Rerankers are the most effective lever for increasing RAG accuracy after basic chunking is solved.
+> **Answer:** When your Vector DB is returning irrelevant documents in the top 5, or when "faithfulness" is low because the LLM is getting distracted by noisy chunks.
 
 ---
 

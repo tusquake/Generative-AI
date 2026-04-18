@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+torch
+diffusers
+transformers
+accelerate
+Pillow
+python-dotenv
+pydantic
+safetensors

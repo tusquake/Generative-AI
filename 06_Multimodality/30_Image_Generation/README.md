@@ -1,4 +1,4 @@
-# 30. Image Generation (Stable Diffusion & DALL-E)
+# Image Generation (Stable Diffusion & DALL-E)
 
 > **Mentor note:** Image generation is the "Creative" side of Generative AI. While LLMs predict the next word, Diffusion models predict the next state of a "Noisy" image. This technology has evolved from simple pixel-pushing to sophisticated tools like ControlNet and LoRA that allow for professional-grade design control. For engineers, the challenge isn't just "prompting" but "fine-tuning" and "guiding" these models for consistent brand output.
 
@@ -40,35 +40,49 @@ graph LR
 
 ## 💻 Code & Implementation
 
-### Generating Images with DALL-E 3 (OpenAI SDK)
+### Generating Images with Stable Diffusion (Hugging Face)
+
+This script uses the Hugging Face Inference API to generate a high-quality image using the Stable Diffusion XL model.
 
 ```python
 import os
-from openai import OpenAI
+import io
+from PIL import Image
+from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_image_gen_demo():
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    # Setup HF Client
+    hf_token = os.getenv("HUGGING_FACE_API_KEY")
+    if not hf_token:
+        print("Error: HUGGING_FACE_API_KEY not found in .env")
+        return
+        
+    client = InferenceClient(api_key=hf_token)
 
-    print("Requesting DALL-E 3 to generate a creative asset...")
+    prompt = "A futuristic cyberpunk city with neon lights and flying cars, digital art style, highly detailed."
+
+    print(f"Requesting image generation for prompt: '{prompt}'...")
     
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt="A futuristic cyberpunk city with neon lights and flying cars, digital art style.",
-        size="1024x1024",
-        quality="standard",
-        n=1,
-    )
-
-    image_url = response.data[0].url
-    print("-" * 50)
-    print(f"Image generated successfully!")
-    print(f"URL: {image_url}")
-    print("-" * 50)
-    print("[Senior Note] DALL-E 3 uses an 'internal LLM' to rewrite your "
-          "prompt for better detail before generating pixels.")
+    try:
+        # Using Stable Diffusion XL via Inference API
+        # This returns a PIL.Image object
+        image = client.text_to_image(
+            prompt,
+            model="stabilityai/stable-diffusion-xl-base-1.0"
+        )
+        
+        # Save the image locally
+        output_path = "generated_city.png"
+        image.save(output_path)
+        
+        print("-" * 50)
+        print(f"Image generated and saved to: {output_path}")
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during image generation: {e}")
 
 if __name__ == "__main__":
     run_image_gen_demo()
@@ -91,13 +105,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is "Inpainting" and "Outpainting"?**
-> **Answer:** "Inpainting" is the process of replacing a specific part of an existing image (e.g., changing a person's shirt color). "Outpainting" is "extending" the image beyond its original boundaries (e.g., seeing what's to the left of the Mona Lisa), maintaining the same lighting and style.
+> **Answer:** "Inpainting" is the process of replacing a specific part of an existing image (e.g., changing a person's shirt color). "Outpainting" is "extending" the image beyond its original boundaries.
 
 **Q: What are "Negative Prompts"?**
-> **Answer:** These are instructions telling the model what *not* to include. Common negative prompts in stable diffusion include "blurry, low quality, distorted hands, extra limbs." They help nudge the diffusion process away from common failure patterns in the training data.
+> **Answer:** These are instructions telling the model what *not* to include. Common negative prompts include "blurry, low quality, distorted hands." They help nudge the diffusion process away from failure patterns.
 
 **Q: How does ControlNet improve image generation?**
-> **Answer:** Standard text-to-image models struggle with precise positioning. ControlNet adds an extra "structural" input—like a sketch, a depth map, or a human pose (OpenPose)—that forces the AI to follow a specific shape while it denoises the pixels. This is the "Industry Standard" for professional AI design.
+> **Answer:** Standard text-to-image models struggle with precise positioning. ControlNet adds an extra "structural" input—like a sketch or a pose—that forces the AI to follow a specific shape while it denoises.
 
 ---
 

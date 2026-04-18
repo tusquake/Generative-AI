@@ -76,7 +76,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 *Vision, Audio, Video, and cross-modal embeddings.*
 
 - [29. Vision & Image Understanding](06_Multimodality/29_Vision_and_Image_Understanding/README.md)
-- [30. Image Generation (Stable Diffusion / DALL-E)](06_Multimodality/Theory/30_Image_Generation.md)
+- [30. Image Generation (Stable Diffusion / DALL-E)](06_Multimodality/30_Image_Generation/README.md)
 - [31. Audio Synthesis & STT](06_Multimodality/Theory/31_Audio.md)
 - [32. Video Generation Fundamentals](06_Multimodality/Theory/32_Video_Generation.md)
 - [33. Specialized Architectures (MoE, State Space)](06_Multimodality/Theory/33_Architectures.md)

@@ -5,3 +5,4 @@ numpy
 groq
 requests
 Pillow
+huggingface_hub

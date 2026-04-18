@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  sd-api:
+    build: .
+    container_name: stable_diffusion_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Optional: Mount a local cache for models to avoid re-downloading
+      - ./model_cache:/root/.cache/huggingface
+    environment:
+      - MODEL_ID=runwayml/stable-diffusion-v1-5
+    # GPU Request (Works on Windows with WSL2 + NVIDIA Drivers)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped

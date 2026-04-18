@@ -1,4 +1,4 @@
-# 01. Architecture Intuition
+# Architecture Intuition
 
 > **Mentor note:** Understanding the "why" behind Transformers is what separates prompt engineers from AI architects. Don't just memorize that Transformers are better; understand that they changed the fundamental way computers "hear" and "see" data by moving from sequential processing to simultaneous attention.
 
@@ -121,4 +121,3 @@ if __name__ == "__main__":
 | **Training Speed** | Slow | Very Fast (GPU optimized) |
 | **Cost Complexity** | Linear $O(N)$ | Quadratic $O(N^2)$ |
 | **Best For** | Real-time audio streams | Complex reasoning, large-scale generation |
-

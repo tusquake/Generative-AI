@@ -17,7 +17,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 ### Domain 1: Foundations
 *Internal mechanics, scaling, and foundational architectures.*
 
-- [01. Architecture Intuition](01_Foundations/Theory/01_Architecture.md)
+- [01. Architecture Intuition](01_Foundations/Architecture/README.md)
 - [02. Tokenization & Context Windows](01_Foundations/Theory/02_Tokenization.md)
 - [03. Sampling Parameters](01_Foundations/Theory/03_Sampling_Parameters.md)
 - [04. API Fundamentals](01_Foundations/Theory/04_API_Fundamentals.md)

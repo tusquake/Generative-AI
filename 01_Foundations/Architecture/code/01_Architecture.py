@@ -20,12 +20,12 @@ def simulate_attention_logic():
         "The": 0.05,
         "bank": 0.15,
         "denied": 0.05,
-        "loan": 0.55,    # ⭐ KEY: 'it' refers most strongly to the 'loan'
+        "loan": 0.55,    # KEY: 'it' refers most strongly to the 'loan'
         "because": 0.02,
         "it": 0.00,      # A word doesn't usually attend to itself
         "was": 0.03,
         "too": 0.05,
-        "risky": 0.10    # ⭐ KEY: 'risky' provides the reason *why* 'it' is the subject
+        "risky": 0.10    # KEY: 'risky' provides the reason *why* 'it' is the subject
     }
 
     print(f"Target Word context analysis: 'it'")

@@ -4,7 +4,7 @@ __pycache__
 .venv
 Dockerfile
 docker-compose.yml
-requirements.txt
+# requirements.txt
 README.md
 implementation_plan.md
 walkthrough.md

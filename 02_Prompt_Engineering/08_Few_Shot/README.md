@@ -1,4 +1,4 @@
-# 08. Few-Shot Prompting
+# Few-Shot Prompting
 
 > **Mentor note:** If Zero-shot is a stress test, Few-shot is a "tutorial." It is the single most effective way to align an LLM with a specific, rigid output format or a subtle conversational style. In production, 3-5 high-quality examples are usually worth more than 1,000 words of instructions.
 
@@ -58,7 +58,8 @@ load_dotenv()
 
 def run_few_shot_demo():
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Using gemini-2.5-flash for latest compatibility
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     # Few-Shot Prompt: Show-and-Tell the pattern
     prompt = """
@@ -87,8 +88,6 @@ def run_few_shot_demo():
 if __name__ == "__main__":
     run_few_shot_demo()
 ```
-
-> **Senior tip:** If the model's performance is still inconsistent, try "Chain-of-Thought" examples (Topic 09) where you show the reasoning steps *inside* the few-shot output. This is often called a **Reasoning Shot**.
 
 ---
 
@@ -122,4 +121,3 @@ if __name__ == "__main__":
 | **Labels** | The tags used for shots | Use clear delimiters like `Input:` / `Output:` |
 | **Cost** | Tokens per example | Keep examples concise; trim "fluff" text |
 | **Recency** | Weight of the last example | Randomize order to avoid bias |
-

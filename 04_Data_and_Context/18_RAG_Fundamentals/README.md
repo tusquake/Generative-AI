@@ -1,4 +1,4 @@
-# 18. RAG Fundamentals (Retrieval Augmented Generation)
+# RAG Fundamentals (Retrieval Augmented Generation)
 
 > **Mentor note:** If an LLM is a brilliant student who graduated last year, RAG is giving them an open-book exam with today's newspaper. You don't need to retrain a model to teach it about your company's new tax strategy or a specific user's medical history. You just need to retrieve the right "context" and stuff it into the prompt. It is the single most important architecture for production AI.
 
@@ -42,16 +42,24 @@ graph TD
 
 ### A "Manual" RAG Loop (Concept)
 
+This script demonstrates the core RAG cycle: retrieving relevant data from a "database" and using it to ground the model's response.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_rag_fundamentals_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for fast grounded generation
+    model_name = "llama-3.1-8b-instant"
 
     # Simulation of a "Database"
     my_private_docs = {
@@ -61,11 +69,11 @@ def run_rag_fundamentals_demo():
 
     user_query = "What is the policy on home office deductions?"
 
-    # ⭐ PHASE 1: RETRIEVAL (Simulated)
+    # PHASE 1: RETRIEVAL (Simulated)
     # in a real app, this would be a Vector Search (Topic 19)
     retrieved_context = my_private_docs["tax_policy"]
 
-    # ⭐ PHASE 2: GENERATION (Grounded)
+    # PHASE 2: GENERATION (Grounded)
     prompt = f"""
     You are a corporate HR assistant. 
     Use the provided CONTEXT to answer the USER QUERY.
@@ -78,11 +86,18 @@ def run_rag_fundamentals_demo():
     """
 
     print(f"Querying with RAG grounding...")
-    response = model.generate_content(prompt)
     
-    print("-" * 50)
-    print(response.text.strip())
-    print("-" * 50)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0 # High precision for RAG
+        )
+        print("-" * 50)
+        print(response.choices[0].message.content.strip())
+        print("-" * 50)
+    except Exception as e:
+        print(f"Error during generation: {e}")
 
 if __name__ == "__main__":
     run_rag_fundamentals_demo()
@@ -126,4 +141,3 @@ if __name__ == "__main__":
 | **Generation** | The LLM writing the final response |
 | **Grounding** | Ensuring the AI doesn't stray from the provided facts |
 | **Source Attribution**| Citing exactly where the information came from |
-

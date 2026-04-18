@@ -52,7 +52,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 ### Domain 4: Data & Context (RAG)
 *Retrieval Augmented Generation for factual grounding.*
 
-- [18. RAG Fundamentals](04_Data_and_Context/Theory/18_RAG_Fundamentals.md)
+- [18. RAG Fundamentals](04_Data_and_Context/18_RAG_Fundamentals/README.md)
 - [19. Vector Databases & Embeddings](04_Data_and_Context/Theory/19_Vector_Databases_and_Embeddings.md)
 - [20. Chunking Strategies](04_Data_and_Context/Theory/20_Chunking_Strategies.md)
 - [21. Context Management](04_Data_and_Context/Theory/21_Context_Management.md)

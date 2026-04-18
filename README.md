@@ -45,7 +45,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 - [14. Directional Stimulus](03_Advanced_Prompting/14_Directional_Stimulus/README.md)
 - [15. Program-of-Thoughts](03_Advanced_Prompting/15_Program_of_Thoughts/README.md)
 - [16. Automatic Prompt Engineer](03_Advanced_Prompting/16_Automatic_Prompt_Engineer/README.md)
-- [17. Prompt Injection & Security](03_Advanced_Prompting/Theory/17_Prompt_Injection.md)
+- [17. Prompt Injection & Security](03_Advanced_Prompting/17_Prompt_Injection/README.md)
 
 ---
 

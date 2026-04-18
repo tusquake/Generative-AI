@@ -1,4 +1,4 @@
-# 27. Planning & Plan Execution
+# Planning & Plan Execution
 
 > **Mentor note:** Most AI failures happen because the model is too "impulsive." It starts writing code or calling tools before it has a strategy. Planning is the "Think-Before-You-Speak" layer of an agent. By forcing the model to decompose a high-level goal (e.g., "Build a full-stack app") into atomized, executable steps, we significantly increase the reliability and logic of the system.
 
@@ -49,7 +49,7 @@ graph TD
     style Plan_Phase fill:#dfd,stroke:#333
 ```
 
-**Why it matters:** Reliability. If an agent tries to "wings it," it will inevitably forget a constraint (e.g., "Must be open on Tuesdays"). A formal plan acts as a checklist that the agent cannot ignore.
+**Why it matters:** Reliability. If an agent tries to "wing it," it will inevitably forget a constraint (e.g., "Must be open on Tuesdays"). A formal plan acts as a checklist that the agent cannot ignore.
 
 ---
 
@@ -57,43 +57,63 @@ graph TD
 
 ### A Basic Plan-and-Execute Loop
 
+This script demonstrates how an LLM can act as a "Strategic Planner" to break a vague goal into actionable sub-tasks.
+
 ```python
 import os
-import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_planning_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        print("Error: GROQ_API_KEY not found in .env")
+        return
+
+    client = Groq(api_key=api_key)
+    # Using llama-3.1-8b-instant for fast logical decomposition
+    model_name = "llama-3.1-8b-instant"
 
     user_goal = "Plan a 3-day trip to Tokyo, find a hotel near Shibuya, and check ramen spots."
 
-    # ⭐ PHASE 1: PLANNING
+    # PHASE 1: PLANNING (The 'Architect' Phase)
     planning_prompt = f"""
     You are a Strategic Planner Agent. 
     Break the user's goal into a numbered list of executable steps.
-    Each step should be 1 simple action.
+    Each step should be 1 simple, discrete action.
     
     GOAL: {user_goal}
     
     PLAN:
     """
-    plan = model.generate_content(planning_prompt).text.strip()
     
-    print("--- GENERATED PLAN ---")
-    print(plan)
     print("-" * 50)
+    print("PHASE 1: GENERATING STRATEGIC PLAN")
+    print("-" * 50)
+    
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": planning_prompt}],
+            temperature=0.0
+        )
+        plan = response.choices[0].message.content.strip()
+        print(plan)
+        print("-" * 50)
 
-    # ⭐ PHASE 2: EXECUTION (Simulating the first step)
-    # In a real system, you would iterate through the list and call tools
-    execution_step = "Step 1: Identifying user preferences and budget."
-    print(f"Executing: {execution_step}...")
-    
-    # [Logic to call tools would go here]
-    
-    print("-" * 50)
+        # PHASE 2: EXECUTION (Simulating the first step)
+        print("PHASE 2: SIMULATING EXECUTION")
+        print("-" * 50)
+        first_step = "Step 1: Define user budget and travel dates."
+        print(f"Executing: {first_step}...")
+        print("Result: Budget is $2000, dates are Oct 12-15.")
+        print("-" * 50)
+        
+    except Exception as e:
+        print(f"Error during planning: {e}")
+
     print("[Senior Note] If an execution step fails, the Planner should receive "
           "the error and 'Re-Plan' the remaining steps.")
 
@@ -117,13 +137,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is "Task Decomposition" in LLM agents?**
-> **Answer:** It's the ability to take a "Fuzzy" user request (e.g., "Build me an e-commerce site") and break it into "Atomized" tasks (e.g., "Draft DB schema," "Write Login route," "Test Auth"). This keeps the LLM's focus narrow and reduces the chance of it getting "Lost in the Middle" of a massive project.
+> **Answer:** It's the ability to take a "Fuzzy" user request and break it into "Atomized" tasks. This keeps the LLM's focus narrow and reduces the chance of it getting "Lost in the Middle" of a massive project.
 
 **Q: How do you handle "Plan Drift" (when an agent gets distracted)?**
-> **Answer:** I implement a **Consistency Manager**. After every 3-5 sub-tasks, the agent is shown its original "Goal" and its "Current Progress" and asked: "Does your next step still align with the goal?" This grounding prevents the AI from moving into irrelevant rabbit holes.
+> **Answer:** I implement a **Consistency Manager**. After every few sub-tasks, the agent is shown its original "Goal" and its "Current Progress" and asked if the next step still aligns.
 
 **Q: Why use "Plan-and-Execute" instead of just "ReAct"?**
-> **Answer:** ReAct is great for discovery (dynamic), but it's expensive and slow because the model writes its thoughts for every single turn. "Plan-and-Execute" creates a roadmap first, which is often more token-efficient for structured tasks where the steps are known in advance.
+> **Answer:** ReAct is great for discovery, but it's expensive because the model writes its thoughts for every turn. "Plan-and-Execute" creates a roadmap first, which is often more token-efficient for structured tasks.
 
 ---
 
@@ -136,4 +156,3 @@ if __name__ == "__main__":
 | **Task Atomization**| Breaking a big job into 1-minute jobs |
 | **State Machine** | Using code logic to force steps (LangGraph) |
 | **Trajectory** | The history of an agent's thoughts and actions |
-

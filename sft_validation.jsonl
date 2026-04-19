@@ -1,0 +1,7 @@
+{
+    "messages": [
+        {"role": "system", "content": "You are a specialized enterprise assistant."}, 
+        {"role": "user", "content": "Refactor this code to use a list comprehension.\n\nInput: result = []\nfor x in items:\n    result.append(x * 2)"},
+        {"role": "assistant", "content": "result = [x * 2 for x in items]"}
+    ]
+}

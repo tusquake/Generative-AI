@@ -79,8 +79,8 @@ The curriculum is organized into 10 specialized domains covering the entire life
 - [30. Image Generation (Stable Diffusion / DALL-E)](06_Multimodality/30_Image_Generation/README.md)
 - [31. Audio Synthesis & STT](06_Multimodality/31_Audio/README.md)
 - [32. Video Generation Fundamentals](06_Multimodality/32_Video_Generation/README.md)
-- [33. Specialized Architectures (MoE, State Space)](06_Multimodality/Theory/33_Architectures.md)
-- [34. Multimodal RAG & Vision Search](06_Multimodality/Theory/34_Multimodal_RAG.md)
+- [33. Specialized Architectures (MoE, State Space)](06_Multimodality/33_Specialized_Architectures/README.md)
+- [34. Multimodal RAG & Vision Search](06_Multimodality/34_Multimodal_RAG/README.md)
 - [35. Embeddings for Retrieval & Analytics](06_Multimodality/Theory/35_Embeddings.md)
 
 ---

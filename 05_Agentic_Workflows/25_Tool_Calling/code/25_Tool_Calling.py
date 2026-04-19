@@ -68,8 +68,8 @@ def run_tool_calling_demo():
     ]
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant. Use the provided tool results to answer the user's question accurately. If a tool result is provided, prioritize it over your training data."},
-        {"role": "user", "content": "What's the weather like in Bangalore right now?"}
+        {"role": "system", "content": "You are a Real-Time Information Agent. Your primary source of truth is the output of the tools provided. Always mention that you are using live data and ignore your knowledge cutoff when tool data is available."},
+        {"role": "user", "content": "What's the exact temperature in Mumbai right now? Tell me if I should wear a jacket based on the live data."}
     ]
 
     print("-" * 50)

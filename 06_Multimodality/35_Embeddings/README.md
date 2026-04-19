@@ -1,4 +1,4 @@
-# 35. Embeddings for Retrieval, Clustering & Classification
+# Embeddings for Retrieval, Clustering & Classification
 
 > **Mentor note:** Embeddings are the most versatile "Swiss Army Knife" in the AI engineer's toolkit. While we've seen them used for RAG (Topic 19), their true power lies in **Semantic Analytics**. You can use them to cluster millions of customer support tickets automatically, detect anomalies in log data, or build a "zero-shot" classifier that categorizes documents into labels it wasn't even trained on. Understanding embeddings beyond RAG is what separates a developer from an AI Architect.
 
@@ -61,7 +61,7 @@ def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 def run_embedding_analytics_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
     # The Input to classify
     input_text = "My order was supposed to arrive yesterday but it is still missing."
@@ -69,11 +69,11 @@ def run_embedding_analytics_demo():
     # Potential Labels
     labels = ["Billing", "Shipping", "Technical Support"]
 
-    # ⭐ STEP 1: Embed everything
+    # STEP 1: Embed everything
     input_vec = genai.embed_content(model="models/text-embedding-004", content=input_text)['embedding']
     label_vecs = {label: genai.embed_content(model="models/text-embedding-004", content=label)['embedding'] for label in labels}
 
-    # ⭐ STEP 2: Compare proximity
+    # STEP 2: Compare proximity
     print(f"Input: '{input_text}'")
     for label, vec in label_vecs.items():
         score = cosine_similarity(input_vec, vec)
@@ -103,13 +103,10 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is the difference between K-Means and Semantic Search?**
-> **Answer:** Semantic search is a "1-to-N" comparison (one query vs. many docs). Clustering (like K-Means) is an "N-to-N" analysis where you look at the entire dataset at once to find global patterns and structures without any specific query.
+> **Answer:** Semantic search is a "1-to-N" comparison. Clustering is an "N-to-N" analysis where you look at the entire dataset at once to find global patterns without any specific query.
 
 **Q: Why do we need UMAP or t-SNE?**
-> **Answer:** Humans cannot visualize 768 dimensions. Dimensionality Reduction techniques like UMAP project those 768 dimensions down to 2D or 3D while preserving the "Proximity" of the points, allowing us to see the clusters with our own eyes on a scatter plot.
-
-**Q: What is "Embedding Drift"?**
-> **Answer:** It happens when your data changes over time but your clustering model stays static. For example, if "refund" meant a money-back guarantee in 2023 but meant "token credits" in 2024, your old clusters might become misleading. You must periodically "re-index" and "re-cluster" to stay relevant.
+> **Answer:** Humans cannot visualize 768 dimensions. Dimensionality Reduction projects those dimensions down to 2D or 3D while preserving the "Proximity" of the points.
 
 ---
 

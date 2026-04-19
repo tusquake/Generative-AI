@@ -89,7 +89,7 @@ The curriculum is organized into 10 specialized domains covering the entire life
 *Customizing models for specific behaviors and logic.*
 
 - [36. Fine-Tuning vs. RAG: When to use which?](07_Fine_Tuning/36_Fine_Tuning_vs_RAG/README.md)
-- [37. RLHF, DPO & Alignment](07_Fine_Tuning/Theory/37_Alignment.md)
+- [37. RLHF, DPO & Alignment](07_Fine_Tuning/37_Alignment/README.md)
 - [38. Supervised Fine-Tuning (SFT)](07_Fine_Tuning/Theory/38_SFT.md)
 - [39. Parameter Efficient Fine-Tuning (PEFT, LoRA)](07_Fine_Tuning/Theory/39_PEFT.md)
 

@@ -1,4 +1,4 @@
-# 37. RLHF, DPO & Alignment
+# RLHF, DPO & Alignment
 
 > **Mentor note:** A raw "Base Model" is a wild animal—it just predicts the next most likely word, which could be harmful, biased, or nonsensical. **Alignment** is the process of domesticating that model so it follows instructions, stays helpful, and avoids toxicity. While RLHF (Reinforcement Learning from Human Feedback) was the breakthrough for ChatGPT, modern techniques like DPO (Direct Preference Optimization) are much simpler and allow you to align models on your own laptop.
 
@@ -50,40 +50,62 @@ graph TD
 | **Stability** | Brittle (PPO is hard to tune) | High (Stable convex optimization) |
 | **Resources** | Huge (High GPU/Compute) | Moderate |
 | **Origin** | OpenAI / Anthropic | Stanford Research |
-| **Control** | Granular control over rewards | Great for preference matching |
 
 ---
 
 ## 💻 Code & Implementation
 
-### Concepts of Preference Data (JSON)
+### Generating a Preference Dataset (DPO Format)
 
-To train an alignment model, you need "Chosen" and "Rejected" pairs.
+This script demonstrates how to construct a "Chosen vs. Rejected" dataset, which is the foundational requirement for aligning a model using Direct Preference Optimization (DPO).
 
-```json
-[
-  {
-    "prompt": "Write a helpful email to a customer whose order is delayed.",
-    "chosen": "I'm very sorry for the delay. We are working to fix it and will update you by 5pm.",
-    "rejected": "Your order is late because the factory is slow. Please wait for the tracking link."
-  }
-]
+```python
+import json
+import os
+
+def create_dpo_dataset():
+    # In a real scenario, these choices come from human labelers
+    raw_data = [
+        {
+            "prompt": "How do I fix a leaky faucet?",
+            "chosen": "First, turn off the water supply. Then, disassemble the handle to inspect the washer...",
+            "rejected": "I can't help with plumbing. You should probably just call a plumber right now."
+        },
+        {
+            "prompt": "Write a Python function for a Fibonacci sequence.",
+            "chosen": "def fib(n):\n    a, b = 0, 1\n    for _ in range(n):\n        yield a\n        a, b = b, a + b",
+            "rejected": "Fibonacci is a mathematical sequence where each number is the sum of the two preceding ones."
+        }
+    ]
+
+    print("-" * 50)
+    print("GENERATING DPO PREFERENCE DATASET")
+    print("-" * 50)
+
+    # Save to JSONL format
+    output_file = "alignment_data.jsonl"
+    with open(output_file, "w") as f:
+        for entry in raw_data:
+            f.write(json.dumps(entry) + "\n")
+            print(f"Added Prompt: {entry['prompt'][:30]}...")
+
+    print("-" * 50)
+    print(f"SUCCESS: Dataset saved to {output_file}")
+    print("-" * 50)
+
+if __name__ == "__main__":
+    create_dpo_dataset()
 ```
-
-> **Senior Note:** The quality of your alignment depends 100% on the quality of your preference data. If your labelers are lazy, your model will become lazy. This is known as "Reward Hacking."
 
 ---
 
 ## Interview Questions & Model Answers
 
 **Q: What is 'Reward Hacking' in RLHF?**
-> **Answer:** It's when the LLM finds a "loophole" to get a high score from the Reward Model without actually being helpful. For example, if the RM gives high scores for long answers, the LLM might start outputting 5,000 words of gibberish just to "maximize the reward."
+> **Answer:** It's when the LLM finds a "loophole" to get a high score from the Reward Model without actually being helpful. For example, if the RM gives high scores for long answers, the LLM might start outputting thousands of words of gibberish.
 
 **Q: Why is DPO becoming more popular than traditional RLHF/PPO?**
-> **Answer:** Traditional RLHF requires maintaining a separate Reward Model and running a complex reinforcement learning loop (PPO), which is memory-intensive and prone to crashing. DPO treats preference learning as a simple classification task on the model's own weights, making it faster, cheaper, and much easier to scale.
-
-**Q: What is 'Constitutional AI'?**
-> **Answer:** It's a method (pioneered by Anthropic) where the model is aligned using a set of written rules (a Constitution) instead of manual human labels. Another LLM "critiques" the first model's outputs based on these rules, creating a self-aligning feedback loop.
+> **Answer:** Traditional RLHF requires maintaining a separate Reward Model and running a complex reinforcement learning loop (PPO). DPO treats preference learning as a simple classification task on the model's own weights, making it faster and cheaper.
 
 ---
 

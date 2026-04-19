@@ -1,4 +1,4 @@
-# 36. Fine-Tuning vs. RAG: When to use which?
+# Fine-Tuning vs. RAG: When to use which?
 
 > **Mentor note:** This is the most common architectural question in Generative AI. RAG provides the model with "new eyes" to see fresh data, while Fine-Tuning gives the model a "new brain" to learn a specific style or vocabulary. If you need to fix a hallucination about a current fact, use RAG. If you need the model to talk like a professional medical coder or output valid 1990s-style COBOL, use Fine-Tuning.
 
@@ -56,29 +56,63 @@ graph TD
 | **Dataset Size** | 0 - Infinite | 100s - 10,000s |
 | **Setup Cost** | Low (Vector DB) | High (Compute/GPU time) |
 | **Latency** | Higher (Search time) | Lower (Immediate response) |
-| **Model Size** | Standard (Llama, GPT) | Becomes specialized |
 
 ---
 
-## Case Study: The Medical Assistant
+## 💻 Code & Implementation
 
-- **Scenario A:** The assistant needs to look up a patient's specific lab results from yesterday.
-  - **Winner:** **RAG**. You cannot fine-tune a model every time a patient gets a blood test.
-- **Scenario B:** The assistant needs to always output notes in the strict ISO-9001 medical coding format.
-  - **Winner:** **Fine-Tuning**. It's much cheaper and more reliable to teach the model the "Vibe" and "Structure" of ISO coding once than to include 10 examples in every single prompt.
+### RAG vs. Fine-Tuning Decision Logic
+
+This script simulates an architectural "Decision Engine" that analyzes project requirements and recommends the optimal AI pattern (RAG, FT, or Hybrid).
+
+```python
+import os
+from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv()
+
+def analyze_ai_architecture(scenario):
+    client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+    model = "llama-3.1-8b-instant"
+
+    prompt = f"""
+    Analyze this project scenario and determine if RAG, Fine-Tuning, or a Hybrid approach is best.
+    
+    SCENARIO: {scenario}
+    
+    Output your decision in the following format:
+    1. RECOMMENDED PATTERN: [RAG/FT/HYBRID]
+    2. RATIONALE: Why?
+    3. KEY BOTTLENECK: What to watch out for?
+    """
+
+    print("-" * 50)
+    print("ARCHITECTURAL DECISION ENGINE")
+    print("-" * 50)
+    
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}]
+    ).choices[0].message.content.strip()
+    
+    print(response)
+    print("-" * 50)
+
+if __name__ == "__main__":
+    scenario = "I need an AI that can answer questions about our company's daily stock prices and internal memos."
+    analyze_ai_architecture(scenario)
+```
 
 ---
 
 ## Interview Questions & Model Answers
 
 **Q: Can Fine-Tuning be used to 'update' an LLM's knowledge on current events?**
-> **Answer:** Technically yes, but practically no. Fine-tuning to add facts is inefficient (requires many examples) and subject to "Catastrophic Forgetting," where the model loses general intelligence. For current events, RAG is the industry standard.
-
-**Q: What is a 'Hybrid' approach?**
-> **Answer:** It's using a Fine-Tuned model (e.g., a model fine-tuned on legal terminology) as the core "Reasoning Brain" and feeding it "Retrieved Context" (e.g., specific case law) via RAG. This provides the best of both worlds: specialized vocabulary + factual grounding.
+> **Answer:** Technically yes, but practically no. Fine-tuning to add facts is inefficient and subject to "Catastrophic Forgetting." For current events, RAG is the industry standard.
 
 **Q: When is Fine-Tuning cheaper than RAG?**
-> **Answer:** At massive scale. If you are serving millions of requests and RAG adds 500 "context tokens" to every prompt, those tokens add up to huge costs. If you fine-tune the model to understand the context implicitly, your prompt becomes shorter, saving significantly on inference costs over time.
+> **Answer:** At massive scale. If RAG adds 500 "context tokens" to every prompt, those costs add up. Fine-tuning allows for shorter prompts (lower inference cost) even if the initial training cost is high.
 
 ---
 

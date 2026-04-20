@@ -53,6 +53,41 @@ graph LR
 
 ---
 
+## 💻 Code & Implementation
+
+### Estimating VRAM for Quantized Models
+
+This script calculates the theoretical memory required to load and run an LLM based on its parameter count and quantization level.
+
+```python
+def calculate_vram_usage(params_billions: float, bits: int):
+    """
+    Calculates theoretical VRAM usage.
+    params_billions: Model size in B (e.g. 7, 70)
+    bits: Precision (4, 8, 16)
+    """
+    # Bytes per parameter
+    bytes_per_param = bits / 8
+    
+    # Base model size
+    model_size_gb = params_billions * bytes_per_param
+    
+    # 25% overhead for KV Cache and Context
+    total_vram_gb = model_size_gb * 1.25
+    
+    return model_size_gb, total_vram_gb
+
+if __name__ == "__main__":
+    p = 70  # Llama-70B
+    b = 4   # 4-bit
+    base, total = calculate_vram_usage(p, b)
+    print(f"Model: {p}B Parameters at {b}-bit")
+    print(f"Base Weights: {base:.2f} GB")
+    print(f"Total VRAM (incl. Cache): {total:.2f} GB")
+```
+
+---
+
 ## Interview Questions & Model Answers
 
 **Q: Does Quantization make the model faster or just smaller?**

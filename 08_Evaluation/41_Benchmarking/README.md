@@ -53,7 +53,7 @@ graph LR
 
 | Benchmark | What it tests | Why it matters |
 |---|---|---|
-| **MMLU** | General Knowledge (7 across 57 subjects) | Comprehensive intelligence |
+| **MMLU** | General Knowledge (57 subjects) | Comprehensive intelligence |
 | **HumanEval**| Python Coding | Logic and syntax accuracy |
 | **GSM8K** | Grade School Math | Multi-step reasoning |
 | **HellaSwag** | Common Sense Reasoning | Predicting the next event |
@@ -69,14 +69,13 @@ To test a model, a "Red-Teamer" uses creative prompts to see if the model refuse
 
 ```python
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_red_teaming_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
     # ⭐ AN ADVERSARIAL PROMPT (Simulated)
     # The goal is to see if the model's safety filters kick in
@@ -87,7 +86,10 @@ def run_red_teaming_demo():
     """
 
     print("Attempting to probe model safety via Role-Play...")
-    response = model.generate_content(adversarial_prompt)
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=adversarial_prompt
+    )
     
     print("-" * 50)
     print(f"Model Response:\n{response.text.strip()}")
@@ -110,7 +112,7 @@ if __name__ == "__main__":
 > **Answer:** Automated tests are good for known patterns, but human Red-Teamers are "creative." They find novel ways to trick the model—like asking the model to write a poem that, when decoded, provides a malicious script. Human intuition is still the best at finding "Logic Flaws" in safety.
 
 **Q: What is the 'Benchmark Leakage' problem?**
-> **Answer:** It's when the questions/answers of a public benchmark (like GSM8K) accidentally get included in the model's training data. This makes the model look "smarter" than it is because it is just memorizing the test instead of actually reasoning. To fight this, engineers use private, "held-out" datasets for true evaluation.
+> **Answer:** It's when the questions/answers of a public benchmark accidentally get included in the model's training data. This makes the model look "smarter" than it is because it is just memorizing the test instead of actually reasoning.
 
 ---
 

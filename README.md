@@ -98,29 +98,29 @@ The curriculum is organized into 10 specialized domains covering the entire life
 ### Domain 8: Evaluation & Safety
 *Adversarial testing and production guardrails.*
 
-- [40. LLM-as-a-Judge (Automated Evaluation)](08_Evaluation/Theory/40_LLM_as_a_Judge.md)
-- [41. Benchmarking & Red-Teaming](08_Evaluation/Theory/41_Benchmarking.md)
-- [42. Guardrails & Content Safety](08_Evaluation/Theory/42_Guardrails.md)
-- [43. Bias, Fairness & Hallucination](08_Evaluation/Theory/43_Bias_Hallucination.md)
+- [40. LLM-as-a-Judge (Automated Evaluation)](08_Evaluation/40_LLM_as_a_Judge/README.md)
+- [41. Benchmarking & Red-Teaming](08_Evaluation/41_Benchmarking/README.md)
+- [42. Guardrails & Content Safety](08_Evaluation/42_Guardrails/README.md)
+- [43. Bias, Fairness & Hallucination](08_Evaluation/43_Bias_Hallucination/README.md)
 
 ---
 
 ### Domain 9: LLMOps & Deployment
 *Optimization, observability, and scaling for production.*
 
-- [44. Quantization & Deployment Strategies](09_LLMOps/Theory/44_Quantization.md)
-- [45. Caching & Latency Optimization](09_LLMOps/Theory/45_Caching.md)
-- [46. Observability & Tracing](09_LLMOps/Theory/46_Observability.md)
-- [47. Cost Optimization & Model Routing](09_LLMOps/Theory/47_Cost_Optimization.md)
-- [48. CI/CD for LLM Applications](09_LLMOps/Theory/48_CICD.md)
+- [44. Quantization & Deployment Strategies](09_LLMOps/44_Quantization/README.md)
+- [45. Caching & Latency Optimization](09_LLMOps/45_Caching/README.md)
+- [46. Observability & Tracing](09_LLMOps/46_Observability/README.md)
+- [47. Cost Optimization & Model Routing](09_LLMOps/47_Cost_Optimization/README.md)
+- [48. CI/CD for LLM Applications](09_LLMOps/48_CICD/README.md)
 
 ---
 
 ### Domain 10: Future Trends
 *The roadmap to AGI and emerging scaling paradigms.*
 
-- [49. Frontier Models & Scaling Laws](10_Future/Theory/49_Scaling_Laws.md)
-- [50. AGI Roadmap & Ethics](10_Future/Theory/50_AGI_Ethics.md)
+- [49. Frontier Models & Scaling Laws](10_Future/49_Scaling_Laws/README.md)
+- [50. AGI Roadmap & Ethics](10_Future/50_AGI_Ethics/README.md)
 
 ---
 

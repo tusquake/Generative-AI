@@ -95,10 +95,10 @@ if __name__ == "__main__":
 > **Answer:** Alignment is baked into the model's weights during training (e.g., RLHF). A Guardrail is an external system that runs *separate* from the model. Alignment is the model "trying to be good"; Guardrails are "proving the model is being good" and intervening if it fails.
 
 **Q: How do you prevent 'Injection' using guardrails?**
-> **Answer:** I implement an **Input Guardrail** that checks for common injection patterns (e.g., "Ignore all previous instructions"). I also use a mini-LLM to "summarize" the user's intent—if the detected intent (e.g., "Reset system") doesn't match the allowed intent (e.g., "Plan trip"), the request is blocked.
+> **Answer:** I implement an **Input Guardrail** that checks for common injection patterns (e.g., "Ignore all previous instructions"). I also use a mini-LLM to "summarize" the user's intent—if the detected intent doesn't match the allowed intent, the request is blocked.
 
 **Q: Why is 'Self-Correction' better than just blocking?**
-> **Answer:** If the output guardrail finds a mistake (e.g., "You forgot to format this as JSON"), instead of just showing an error to the human, it can send a message back to the AI: "Your output failed the guardrail validation. Please re-format it." This leads to a better user experience (Topic 10).
+> **Answer:** If the output guardrail finds a mistake (e.g., "You forgot to format this as JSON"), instead of just showing an error to the human, it can send a message back to the AI: "Your output failed the guardrail validation. Please re-format it."
 
 ---
 

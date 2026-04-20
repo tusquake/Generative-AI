@@ -1,6 +1,6 @@
 # 48. CI/CD for LLM Applications
 
-> **Mentor note:** Standard software breaks when you change a line of code. AI software breaks when you change a single word in a prompt (Topic 36). **CI/CD for LLMs** is about automating the testing of your prompts and models. Every time you push code, an "Evaluation pipeline" should run 50 Judge-based tests (Topic 40) to ensure your "better" prompt doesn't secretly break 20 other use-cases.
+> **Mentor note:** Standard software breaks when you change a line of code. AI software breaks when you change a single word in a prompt. **CI/CD for LLMs** is about automating the testing of your prompts and models. Every time you push code, an "Evaluation pipeline" should run 50 Judge-based tests to ensure your "better" prompt doesn't secretly break 20 other use-cases.
 
 ---
 
@@ -18,7 +18,7 @@
 
 ### The Continuous Evaluation Loop
 
-Unlike traditional CI (where you check for syntax), AI CI checks for **Semantic Quality**. You run your new prompt against a "Golden Set" and check if the Judge's score (Topic 40) remains high.
+Unlike traditional CI (where you check for syntax), AI CI checks for **Semantic Quality**. You run your new prompt against a "Golden Set" and check if the Judge's score remains high.
 
 ```mermaid
 graph TD
@@ -54,11 +54,11 @@ graph TD
 
 ## 💻 Code & Implementation
 
-### A Basic Regression Test Script (Concept)
+### A Basic Regression Test Script
+
+This script simulates a CI gate that evaluates prompt quality against a predefined Golden Set.
 
 ```python
-import os
-
 def run_regression_tests():
     # Golden Set: Inputs where we KNOW what the answer should look like
     golden_set = [
@@ -92,13 +92,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is 'Shadow Deployment' in LLMOps?**
-> **Answer:** It's when you deploy a new model or prompt but don't show its results to the user. Instead, the system sends every user query to both the old "Live" model and the "Shadow" model. We then compare the outputs using a Judge model. If the shadow model performs better over 1,000 real requests, we "promote" it to live production.
+> **Answer:** It's when you deploy a new model but don't show results to the user. Instead, the system sends every query to both the Live and Shadow model. We compare outputs using a Judge. If shadow performs better over 1,000 real requests, we promote it.
 
 **Q: Why is 'Versioning' prompts as important as versioning code?**
-> **Answer:** Because prompts are effectively "Source Code" that dictates the AI's behavior. If you change a prompt without versioning it, and the AI starts making mistakes, you have no way to "Rollback" to the previous working version. I store prompts in separate `.txt` or `.yaml` files in Git.
+> **Answer:** Because prompts dictate AI behavior. If the AI starts making mistakes after a change, you need a way to roll back. I store prompts in separate files in Git, not hardcoded in the logic.
 
 **Q: How do you handle 'Non-Deterministic' tests in CI?**
-> **Answer:** Since LLMs can give slightly different answers even for the same input, we don't use "Exact Match" tests. Instead, we use **Statistical Passing**. A test only "Fails" if the Judge's average score across 5 runs drops below a specific threshold (e.g., 80%).
+> **Answer:** We don't use "Exact Match" tests. Instead, we use **Statistical Passing**. A test only fails if the Judge's average score across multiple runs drops below a threshold (e.g., 80%).
 
 ---
 
@@ -110,4 +110,4 @@ if __name__ == "__main__":
 | **Regression** | When a change makes an existing feature worse |
 | **Judge** | The model that automates your CI testing |
 | **Rollback** | Reverting to a previous model version |
-| **Metadata** | Tagging traces with the specific Prompt Version |
+| **Shadow Mode** | Parallel testing without user impact |

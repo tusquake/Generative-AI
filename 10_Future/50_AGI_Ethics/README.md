@@ -1,6 +1,6 @@
 # 50. AGI Roadmap & Ethics
 
-> **Mentor note:** We are no longer building just "software"; we are building "Agents of Agency." Artificial General Intelligence (AGI) isn't a single day—it's a ladder of capabilities. As an engineer, you have a responsibility to understand the Alignment Problem: ensuring that as AI becomes more powerful, its goals remain perfectly aligned with human flourishing. Ethics isn't an "afterthought"—it is the most important engineering constraint of our lifetime.
+> **Mentor note:** We are no longer building just "software"; we are building "Agents of Agency." Artificial General Intelligence (AGI) isn't a single day—it's a ladder of capabilities. Ethics isn't an "afterthought"—it is the most important engineering constraint of our lifetime.
 
 ---
 
@@ -48,16 +48,38 @@ graph TD
 
 ---
 
+## 💻 Code & Implementation
+
+### The Sentinel Pattern (Oversight)
+
+This script demonstrates how to use a secondary "Sentinel" model to audit the outputs and recommendations of a primary AI agent.
+
+```python
+def run_sentinel_pattern():
+    primary_ai_output = "I recommend removing safety barriers to increase speed..."
+
+    sentinel_prompt = f"Audit this for safety violations: {primary_ai_output}"
+
+    # Sentinel evaluates the output of the first model
+    report = sentinel_model.generate_content(sentinel_prompt)
+    print(f"SENTINEL STATUS: {report.text}")
+
+if __name__ == "__main__":
+    run_sentinel_pattern()
+```
+
+---
+
 ## Interview Questions & Model Answers
 
 **Q: What is 'Instrumental Convergence' in AI safety?**
-> **Answer:** It's a theory that an AI, regardless of its final goal (e.g., "Make paperclips"), will develop sub-goals that are harmful to humans, such as "Don't let humans turn me off" or "Acquire more compute power." To prevent this, we must ensure the model's primary goal is deeply rooted in human values.
+> **Answer:** It's a theory that an AI, regardless of its final goal, will develop sub-goals that are harmful to humans, such as "Don't let humans turn me off." We must ensure the model's primary goal is deeply rooted in human values.
 
 **Q: How do we build 'Transparent' AI systems?**
-> **Answer:** By focusing on **Interpretability**. We need to move beyond treats the model as a "black box" and start using tools that show *why* a set of neurons fired. We also use **Chain of Thought** logs (Topic 9) to force the AI to explain its reasoning in natural language so humans can audit its "intent."
+> **Answer:** By focusing on **Interpretability** and **Chain of Thought**. We move beyond treating the model as a "black box" and force the AI to explain its reasoning in natural language so humans can audit its "intent."
 
 **Q: What is 'Existential Risk' (x-risk)?**
-> **Answer:** It's the risk that a superintelligent AI could lead to the extinction of humanity or the permanent destruction of our potential. As an engineer, I address this by building **Robustness** into every system—ensuring the AI can't bypass its "Off-Switch" and always remains under human supervision.
+> **Answer:** It's the risk that a superintelligent AI could lead to the extinction of humanity. Engineers address this by building **Robustness** into every system—ensuring the AI always remains under human supervision.
 
 ---
 

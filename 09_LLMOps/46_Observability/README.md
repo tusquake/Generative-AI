@@ -1,6 +1,6 @@
 # 46. Observability & Tracing
 
-> **Mentor note:** Debugging a standard app is easy: you look at the stack trace. Debugging an AI Agent is a nightmare: the logic is hidden inside a "black box" of weights. **Observability** and **Tracing** provide the "X-ray vision" you need. Tools like LangSmith or Langfuse allow you to see every tool call, every hidden prompt, and exactly how much each step cost in real-time. If it's not observable, it's not production-ready.
+> **Mentor note:** Debugging a standard app is easy: you look at the stack trace. Debugging an AI Agent is a nightmare: the logic is hidden inside a "black box" of weights. **Observability** and **Tracing** provide the "X-ray vision" you need. Tools like LangSmith or Langfuse allow you to see every tool call, every hidden prompt, and exactly how much each step cost in real-time.
 
 ---
 
@@ -41,14 +41,18 @@ graph TD
 
 ## 💻 Code & Implementation
 
-### Integrating Tracing (LangChain/LangSmith Concept)
+### Integrating Tracing (LangSmith Pattern)
+
+This script demonstrates how to configure your environment for automated tracing of LLM applications.
 
 ```python
 import os
 from dotenv import load_dotenv
 
-# Note: Integration is usually done via Environment Variables
 def setup_tracing():
+    load_dotenv()
+    
+    # Global settings for LangChain/LangSmith
     os.environ["LANGSMITH_TRACING"] = "true"
     os.environ["LANGSMITH_API_KEY"] = os.getenv("LANGSMITH_KEY")
     os.environ["LANGSMITH_PROJECT"] = "Curriculum-Project-Refactor"
@@ -82,14 +86,14 @@ if __name__ == "__main__":
 
 ## Interview Questions & Model Answers
 
-**Q: Why don't we just use standard application logging (e.g., Python logging) for LLMs?**
-> **Answer:** Standard logs are linear and flat. AI workflows are "nested" and "probabilistic." We need to see the **Chain of Thought** and the exact variables passed into a specific tool call three layers deep. Tracing tools visualize this hierarchy (Spans), making it much easier to debug a specific agents' train of thought.
+**Q: Why don't we just use standard application logging for LLMs?**
+> **Answer:** Standard logs are linear and flat. AI workflows are "nested" and "probabilistic." We need to see the **Chain of Thought** and the exact variables passed into a specific tool call three layers deep.
 
 **Q: What is 'Dataset Curation' via observability?**
-> **Answer:** It's the practice of looking at production traces where the user gave a "Thumbs Up" and saving those as "Gold Samples" for future fine-tuning or evaluation. Observability turns your production usage into a high-quality data factory.
+> **Answer:** It's the practice of looking at production traces where the user gave a "Thumbs Up" and saving those as "Gold Samples" for future fine-tuning or evaluation.
 
 **Q: How do you handle privacy in AI tracing?**
-> **Answer:** Tracing tools can capture sensitive user data. As an engineer, I implement a **Privacy Filter** at the SDK level to redact PII (Name, Email, IDs) before the trace is ever sent to the observability server (e.g., using `hide_inputs=True` in LangSmith).
+> **Answer:** I implement a **Privacy Filter** at the SDK level to redact PII (Name, Email, IDs) before the trace is ever sent to the observability server.
 
 ---
 

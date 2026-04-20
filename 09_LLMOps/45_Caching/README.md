@@ -1,6 +1,6 @@
 # 45. Caching & Latency Optimization
 
-> **Mentor note:** In production, the "First Token Latency" (TTFT) is the difference between a snappy user experience and a frustrating one. **Prompt Caching** is the biggest breakthrough in LLM cost and speed since quantization. If you have a massive PDF or a long conversation history, the API provider saves the mathematical state of that data so you don't have to "re-pay" or "re-wait" for it on the next turn. It's like a browser cache for your AI's brain.
+> **Mentor note:** In production, the "First Token Latency" (TTFT) is the difference between a snappy user experience and a frustrating one. **Prompt Caching** is the biggest breakthrough in LLM cost and speed since quantization. If you have a massive PDF or a long conversation history, the API provider saves the mathematical state of that data so you don't have to "re-pay" or "re-wait" for it on the next turn.
 
 ---
 
@@ -52,33 +52,36 @@ graph TD
 
 ## 💻 Code & Implementation
 
-### Using Context Caching (Gemini API Concept)
+### Using Context Caching Pattern
+
+This script demonstrates the pattern for creating a persistent context cache in the Gemini API.
 
 ```python
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_cache_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-    # Simulation: Caching a large file
-    print("Preparing a massive document for caching...")
+    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
     
-    # In reality:
-    # cache = genai.caching.CachedContent.create(
-    #     model='models/gemini-1.5-flash-001',
-    #     display_name='legal_corpus_v1',
-    #     contents=[large_file_object],
-    #     ttl=600 # 10 Minutes
+    # Simulation: Caching a large file (> 32k tokens)
+    print("Creating Context Cache (Conceptual)...")
+    
+    # cache = client.caches.create(
+    #     model="gemini-1.5-flash",
+    #     config={
+    #         "display_name": "knowledge_base",
+    #         "contents": ["... massive text ..."],
+    #         "ttl": "3600s" 
+    #     }
     # )
 
     print("-" * 50)
     print("Cache Created! Subsequent queries about this file will be:")
     print("1. 90% cheaper (on some platforms)")
-    print("2. 5x faster to start generating")
+    print("2. 5x - 10x faster to start generating (TTFT)")
     print("-" * 50)
 
 if __name__ == "__main__":
@@ -90,13 +93,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: What is 'Speculative Decoding'?**
-> **Answer:** It's a technique where a very small, fast model (the Draft model) guesses the next few words. A large, powerful model (the Oracle) then looks at those guesses in parallel. If the guesses are right, we accept them. This can speed up inference by 2x-3x without losing any of the large model's intelligence.
+> **Answer:** It's a technique where a very small, fast model (the Draft model) guesses the next few words. A large, powerful model (the Oracle) then looks at those guesses in parallel. If the guesses are right, we accept them. This can speed up inference by 2x-3x.
 
 **Q: What is the risk of 'Semantic Caching'?**
-> **Answer:** Semantic caching (e.g., using Redis to store `{query_embedding: answer}`) can save money, but it risks "Stale Answers." If a user's question is *slightly* different but semantically similar, they might get a cached answer that is technically wrong or misses the nuance of the new question.
+> **Answer:** Semantic caching (e.g., using Redis to store `{query_embedding: answer}`) can save money, but it risks "Stale Answers." If a user's question is *slightly* different but semantically similar, they might get a cached answer that is technically wrong.
 
 **Q: Why is 'Streaming' considered a latency optimization?**
-> **Answer:** It doesn't actually make the model faster, but it significantly improves the **Perceived Latency** for the user. By showing the first word as soon as it's ready, the human can start reading while the AI is still "thinking" about the rest of the sentence.
+> **Answer:** It doesn't actually make the model faster, but it significantly improves the **Perceived Latency** for the user. By showing the first word as soon as it's ready, the human can start reading while the AI is still "thinking."
 
 ---
 

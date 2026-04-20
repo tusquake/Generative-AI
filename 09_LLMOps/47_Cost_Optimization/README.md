@@ -1,6 +1,6 @@
 # 47. Cost Optimization & Model Routing
 
-> **Mentor note:** Using GPT-4o or Gemini 1.5 Pro for every single request is like using a luxury car to pick up groceries 100 meters away. It's expensive and unnecessary. **Model Routing** is the strategy where you use a cheap, fast model (Flash/Haiku) for 90% of tasks and "escalate" to a powerful model (Pro/Opus) only when the complexity is high. Mastering this logic is the only way to build a profitable AI business.
+> **Mentor note:** Using GPT-4o or Gemini 1.5 Pro for every single request is like using a luxury car to pick up groceries 100 meters away. **Model Routing** is the strategy where you use a cheap, fast model (Flash) for 90% of tasks and "escalate" to a powerful model (Pro) only when the complexity is high.
 
 ---
 
@@ -22,7 +22,7 @@ Instead of hardcoding one model, you place a **Classifier** (or a very cheap SLM
 
 ```mermaid
 graph TD
-    User[User Question] --> R[The Router: SLM]
+    User[User Question] --> R[The Router: Heuristic/SLM]
     R -->|Easy: 'Hi'| M1[Cheap Model: Flash]
     R -->|Medium: 'Summarize this'| M1
     R -->|Hard: 'Analyze 50 files'| M2[Premium Model: Pro]
@@ -45,21 +45,21 @@ graph TD
 |---|---|---|---|
 | **SLM (Edge)** | Phi-3, Gemma | $0 (Local) | PII masking, simple intent routing |
 | **Small (Flash)**| Gemini Flash | $ (Cheap) | RAG, summarization, simple agents |
-| **Premium (Pro)**| Gemini Pro/GPT-4o | $$$ | Complex coding, long logic, judge |
+| **Premium (Pro)**| Gemini Pro | $$$ | Complex coding, long logic, judge |
 | **Batch API** | Any via Batch | 50% Discount | Translation, data cleaning, logs |
 
 ---
 
 ## 💻 Code & Implementation
 
-### A Basic Intent-Based Router (Python)
+### A Basic Intent-Based Router
+
+This script demonstrates how to route queries to different models based on complexity.
 
 ```python
-import os
 def get_efficient_model(user_query: str):
     """
-    Decides between a cheap model and a premium model
-    to save costs.
+    Decides between a cheap model and a premium model.
     """
     complex_keywords = ["analyze", "code", "debug", "architect", "math"]
     
@@ -99,13 +99,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: In a RAG pipeline, how do you optimize costs for a massive document?**
-> **Answer:** I use **Multi-Stage Summarization**. I use a cheap model (Flash) to extract key facts from the document and create a dense summary. I then send only that summary to the expensive model for the final answer. This reduces the input tokens by 90%+.
+> **Answer:** I use **Multi-Stage Summarization**. I use a cheap model (Flash) to extract key facts and create a dense summary. I then send only that summary to the expensive model for the final answer.
 
 **Q: What is a 'Batch API' and when should you use it?**
-> **Answer:** Batch APIs allow you to send a bulk of requests (e.g., 50,000 translations) that are processed within 24 hours. They are typically priced at 50% of the normal cost. I use this for non-interactive tasks like overnight data cleaning or SEO content generation.
+> **Answer:** Batch APIs allow you to send a bulk of requests that are processed within 24 hours at ~50% cost. Use this for non-interactive tasks like overnight data cleaning.
 
-**Q: Why use an SLM (Small Language Model) as a router?**
-> **Answer:** SLMs like Phi-3 are so small they can be hosted on a single CPU or edge device for almost $0. Using them as a router allows you to "triage" queries locally before making an expensive network call to a cloud LLM provider.
+**Q: Why use an SLM as a router?**
+> **Answer:** SLMs like Phi-3 can be hosted on a single CPU for almost $0. Using them as a router allows you to "triage" queries locally before making an expensive cloud call.
 
 ---
 

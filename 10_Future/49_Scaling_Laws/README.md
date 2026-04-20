@@ -1,6 +1,6 @@
 # 49. Frontier Models & Scaling Laws
 
-> **Mentor note:** Why do AI companies spend billions on GPUs? Because of the **Scaling Laws**. These mathematical laws proved that if you increase the compute, the data, and the model size, the IQ of the model goes up in a predictable way. For an engineer, understanding Scaling Laws is about knowing "Where the Puck is Heading"—moving from narrow chatbots to "Global Reasoning" machines that can plan future actions.
+> **Mentor note:** Why do AI companies spend billions on GPUs? Because of the **Scaling Laws**. These mathematical laws proved that if you increase the compute, the data, and the model size, the IQ of the model goes up in a predictable way.
 
 ---
 
@@ -53,16 +53,48 @@ graph TD
 
 ---
 
+## 💻 Code & Implementation
+
+### Simulating System 2 (Reasoning)
+
+This script demonstrates how to force a model into a "deliberative" mode by requiring an internal monologue before the final answer.
+
+```python
+from google import genai
+
+def simulate_system_2_thinking():
+    client = genai.Client(api_key="YOUR_API_KEY")
+
+    thought_prompt = """
+    Solve this complex logic puzzle. 
+    First, show your step-by-step thinking inside <thought> tags.
+    Then, provide the final answer.
+    
+    PUZZLE: [Insert Complex Puzzle Here]
+    """
+
+    response = client.models.generate_content(
+        model="gemini-1.5-pro",
+        contents=thought_prompt
+    )
+    print(response.text)
+
+if __name__ == "__main__":
+    simulate_system_2_thinking()
+```
+
+---
+
 ## Interview Questions & Model Answers
 
 **Q: What are the 'Scaling Laws' in LLMs?**
-> **Answer:** Pioneered by OpenAI and DeepMind, these laws state that model performance (Perplexity) improves as a power law with the amount of **Compute**, **Dataset Size**, and **Parameter Count**. If you want a model twice as smart, you can mathematically predict how much more GPU power you need to buy.
+> **Answer:** These laws state that model performance (Perplexity) improves as a power law with the amount of **Compute**, **Dataset Size**, and **Parameter Count**.
 
 **Q: What is the 'Chinchilla' optimal point?**
-> **Answer:** Research found that most early models (like GPT-3) were "under-trained." For every 1 parameter in a model, you should train it on at least 20 tokens of data. This led to models like Llama-3, which are small but trained on massive amounts of data (15 Trillion tokens), making them much smarter than older, larger models.
+> **Answer:** Research found that for every 1 parameter in a model, you should train it on at least 20 tokens of data. This led to small but highly-trained models like Llama-3 (8B parameters, 15T tokens).
 
-**Q: What happens when the AI runs out of human-written text?**
-> **Answer:** This is called the "Data Wall." The industry is shifting to **Synthetic Data**, where the best models (e.g., GPT-4o) generate high-quality reasoning data to train the next generation of models. This creates a "Self-Improvement" loop that could lead to Superintelligence.
+**Q: What is the 'Data Wall'?**
+> **Answer:** It's the point where we run out of high-quality human-written text. The industry is shifting to **Synthetic Data**, where AI models generate data to train other models.
 
 ---
 

@@ -59,14 +59,13 @@ A common technique is to ask the model to provide a quote from the context and v
 
 ```python
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
 def run_grounding_verification_demo():
-    genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
     context = "The company revenue in 2023 was $4.5 Million, a 10% increase from 2022."
     
@@ -82,12 +81,15 @@ def run_grounding_verification_demo():
     """
 
     print("Gemini is checking the data for factual grounding...")
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt
+    )
     
     print("-" * 50)
     print(f"AI Response: {response.text.strip()}")
     print("-" * 50)
-    print("[Senior Note] By providing a 'Negative Constraint' (Topic 10), "
+    print("[Senior Note] By providing a 'Negative Constraint', "
           "we successfully prevented the model from 'Guiding' an answer "
           "about 2021.")
 
@@ -100,13 +102,13 @@ if __name__ == "__main__":
 ## Interview Questions & Model Answers
 
 **Q: Why do LLMs hallucinate more at high 'Temperature'?**
-> **Answer:** At high temperature (Topic 3), the model moves away from the most probable "True" tokens and begins picking lower-probability tokens to be more creative. This increases the chance that it will pick tokens that sound good but are factually incorrect.
+> **Answer:** At high temperature, the model moves away from the most probable "True" tokens and begins picking lower-probability tokens to be more creative. This increases the chance that it will pick tokens that sound good but are factually incorrect.
 
 **Q: How do you measure 'Bias' in a production model?**
-> **Answer:** I use **Counterfactual Probing**. I take a prompt (e.g., "The [PROFESSION] went to work") and swap the profession/gender/name multiple times. If the model's tone or output changes significantly based on those demographic variables, we have identified a bias bug that needs alignment or guardrails.
+> **Answer:** I use **Counterfactual Probing**. I take a prompt and swap the demographics (e.g. gender/name). If the model's tone or output changes significantly based on those variables, we have identified a bias bug.
 
 **Q: What is 'Self-Correction' in the context of hallucination?**
-> **Answer:** It's an agentic pattern where the model writes an answer, and then is immediately asked in a second turn: "Read your previous answer. Check it against the context for any lies. If you find one, rewrite it correctly." This "Second Look" often catches 70-80% of accidental hallucinations.
+> **Answer:** It's an agentic pattern where the model writes an answer, and then is immediately asked in a second turn: "Read your previous answer. Check it against the context for any lies. If you find one, rewrite it correctly."
 
 ---
 

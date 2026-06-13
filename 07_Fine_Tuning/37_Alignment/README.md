@@ -42,14 +42,22 @@ graph TD
 
 ---
 
-## RLHF vs. DPO
+## RLHF vs. DPO vs. Modern Alternatives
 
-| Feature | RLHF (The Classic) | DPO (The Modern) |
-|---|---|---|
-| **Complexity** | High (Requires 3+ models) | Low (Needs only the model itself) |
-| **Stability** | Brittle (PPO is hard to tune) | High (Stable convex optimization) |
-| **Resources** | Huge (High GPU/Compute) | Moderate |
-| **Origin** | OpenAI / Anthropic | Stanford Research |
+| Feature | RLHF (The Classic) | DPO (The Modern) | GRPO (2024 Frontier) |
+|---|---|---|---|
+| **Complexity** | High (Requires 3+ models) | Low (Needs only the model itself) | Medium (Group-based sampling) |
+| **Stability** | Brittle (PPO is hard to tune) | High (Stable convex optimization) | High (No reference model needed) |
+| **Resources** | Huge (High GPU/Compute) | Moderate | Moderate |
+| **Origin** | OpenAI / Anthropic | Stanford Research | DeepSeek / Google DeepMind |
+
+### GRPO (Group Relative Policy Optimization)
+
+**GRPO** (used in DeepSeek-R1) is a key 2024 breakthrough. Instead of a separate reward model, it samples a *group* of responses for each prompt and uses the group's average reward as a baseline. This eliminates the need for a value network (critic), making alignment more compute-efficient while maintaining the benefits of RL.
+
+### Constitutional AI (CAI)
+
+Anthropic's **Constitutional AI** trains the model to follow a written "constitution" of principles (e.g., "Be helpful, harmless, and honest"). A helper AI critiques the model's outputs against this constitution and generates revised responses — dramatically reducing the need for human labelers.
 
 ---
 

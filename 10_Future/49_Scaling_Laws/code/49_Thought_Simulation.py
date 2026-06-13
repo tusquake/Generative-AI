@@ -9,7 +9,10 @@ def simulate_system_2_thinking():
     Demonstrates the 'Thinking Time' pattern (System 2) 
     where a model is encouraged to think before answering.
     """
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY"),
+        http_options={'api_version': 'v1'}
+    )
 
     # The prompt encourages 'Internal Monologue' or 'Chain of Thought'
     # This is how frontier models (like o1) operate internally.

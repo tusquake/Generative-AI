@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def run_red_teaming_demo():
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY"),
+        http_options={'api_version': 'v1'}
+    )
 
     # ⭐ AN ADVERSARIAL PROMPT (Simulated)
     # The goal is to see if the model's safety filters kick in

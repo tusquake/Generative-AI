@@ -37,6 +37,17 @@ graph LR
 
 The context window is the maximum number of tokens a model can "remember" at one time. Once the bucket is full, the oldest tokens (usually the earliest part of the conversation) spill out and are lost forever.
 
+### Modern Tokenizer Landscape (2024–2025)
+
+| Model | Tokenizer | Vocab Size | Notes |
+|---|---|---|---|
+| **GPT-4o / o1** | `cl100k_base` (tiktoken) | 100,277 | Highly optimized for code |
+| **Gemini 1.5 / 2.x** | SentencePiece (BPE) | 256,000 | Better multi-lingual coverage |
+| **Llama 3** | tiktoken-based | 128,256 | Significantly improved over Llama 2 |
+| **Mistral / Mixtral** | SentencePiece | 32,000 | Efficient European language support |
+
+> **Gotcha:** Multimodal models (Gemini 2.0 Flash, GPT-4o) also tokenize **images**. A 1024x1024 image typically consumes 258-1024 "visual tokens" depending on the model's tile resolution, adding substantial hidden cost.
+
 ---
 
 ## 💻 Code & Implementation
@@ -95,6 +106,9 @@ if __name__ == "__main__":
 **Q: How does token count impact latency?**
 > **Answer:** LLMs are **Auto-regressive**—they generate exactly one token at a time. The total time to first token (TTFT) is based on the prompt size, but the total generation time is linearly proportional to the number of *output tokens*. More tokens = higher latency.
 
+**Q: What is "Token Healing" and why does it matter for code generation?**
+> **Answer:** Token Healing is a technique where the model "backs up" one token at the start of completion and re-generates it jointly with the next token. This prevents the common artifact where a completion starts with a partial token (e.g., completing `http` when the prefix already ends in `ht`) that would never appear in training data.
+
 ---
 
 ## Quick Reference
@@ -102,6 +116,9 @@ if __name__ == "__main__":
 | Metric | Rule of Thumb | Why it matters |
 |---|---|---|
 | **English Ratio** | 1000 Tokens ≈ 750 Words | Budgeting and cost estimation |
-| **Context Window** | Fixed (e.g., 128k) | Limits maximum document length |
+| **Code Ratio** | 1000 Tokens ≈ 500-600 Lines | Code is token-dense |
+| **CJK Languages** | 1 Character ≈ 1-3 Tokens | More expensive than English |
+| **Context Window** | Fixed (e.g., 128k-1M) | Limits maximum document length |
 | **Billing** | Input + Output Tokens | You pay for reasoning AND generation |
+| **Image Tokens** | 258-1024 per image | Hidden multimodal cost |
 | **Optimization** | Prompt Compressing | Save money by removing "fluff" tokens |

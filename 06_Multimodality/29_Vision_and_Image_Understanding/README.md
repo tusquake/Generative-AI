@@ -112,6 +112,18 @@ if __name__ == "__main__":
 | **Layout** | Often broken | Preserved (Spatial understanding)|
 | **Format** | Plain Text | JSON / Markdown / Tables |
 
+### Leading Vision Models (2024–2025)
+
+| Model | Provider | Context / Image Limit | Strength |
+|---|---|---|---|
+| **Gemini 2.5 Pro** | Google | 1M tokens, 3600 images | Long video, document reasoning |
+| **GPT-4o** | OpenAI | 128k tokens | Coding from screenshots, design |
+| **Claude 3.7 Sonnet** | Anthropic | 200k tokens | Complex charts, medical imaging |
+| **Llama 3.2 Vision** | Meta | 128k tokens | Open-source multimodal baseline |
+| **InternVL 2** | OpenGVLab | 4k tokens | Strong open-source alternative |
+
+> **Emerging Capability:** Video understanding is now production-ready. Gemini 2.5 Pro and GPT-4o can analyze full YouTube videos or hour-long meeting recordings — not just static images.
+
 ---
 
 ## Interview Questions & Model Answers

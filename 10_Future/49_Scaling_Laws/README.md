@@ -51,6 +51,30 @@ graph TD
 | **Inference Compute**| The "Time" spent thinking | Massive scaling for complex tasks |
 | **Quality** | The "Purity" of training data| Expert-curated curriculum |
 
+### Inference-Time Scaling (The 2024–2025 Paradigm)
+
+The biggest shift in modern AI is moving from **pre-training scaling** to **inference-time scaling** ("test-time compute"):
+
+| Model / Capability | Mechanism | Trade-off |
+|---|---|---|
+| **OpenAI o1 / o3** | Extended chain-of-thought before answering | Higher latency, ~10x cost |
+| **Gemini 2.5 Pro/Flash (Thinking)** | Configurable thinking budget (tokens) | Tunable cost/quality |
+| **DeepSeek-R1** | GRPO-trained long CoT | Open-source, cost-efficient |
+| **Claude 3.7 Sonnet (Extended)** | Extended thinking mode | 2x-5x response time |
+
+> **Key insight:** For many hard problems (math, code, science), spending 10x more at inference is cheaper and faster than training a larger model. This is why "reasoning models" are dominating leaderboards in 2025.
+
+### Frontier Model Landscape (Mid-2025)
+
+| Model | Provider | Strengths |
+|---|---|---|
+| **GPT-4o / o3** | OpenAI | Multimodal, reasoning, code |
+| **Gemini 2.5 Pro** | Google | Long context (1M tokens), reasoning |
+| **Claude 3.7 Sonnet** | Anthropic | Coding, extended thinking, safety |
+| **Llama 3.3 70B** | Meta | Best open-source general purpose |
+| **DeepSeek-R1** | DeepSeek | Open-source reasoning model |
+| **Mistral Large 2** | Mistral AI | Strong European language support |
+
 ---
 
 ## 💻 Code & Implementation

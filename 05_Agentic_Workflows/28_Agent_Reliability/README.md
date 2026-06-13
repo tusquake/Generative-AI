@@ -105,6 +105,19 @@ if __name__ == "__main__":
 | **Post-Action** | Output Verification | Ensure the JSON matches the expected schema |
 | **Cross-Model** | Judge Agent | Use a larger model to grade a smaller model |
 
+### Real-World Agentic Reliability Benchmarks (2025)
+
+Agents are now evaluated on standardized reliability benchmarks:
+
+| Benchmark | What it tests |
+|---|---|
+| **SWE-bench Verified** | % of real GitHub issues resolved end-to-end |
+| **AssistantBench** | Multi-step web research tasks |
+| **GAIA** | Real-world tool-use and reasoning |
+| **AgentBench** | Operating system, web, database agent tasks |
+
+> **2025 Context:** Top agents (Claude 3.7 Sonnet, o3) score ~50-65% on SWE-bench Verified — meaning roughly half of real-world engineering bugs can be resolved autonomously. Reliability engineering is the primary bottleneck to the remaining 50%.
+
 ---
 
 ## Interview Questions & Model Answers

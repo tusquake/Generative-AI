@@ -50,10 +50,24 @@ Transformers suffer from "Quadratic Scurvy"—as the context gets longer, the co
 
 | Paradigm | Example | Pro | Con |
 |---|---|---|---|
-| **Dense** | Llama-3 | High consistency / Simple | Slow at extreme scale |
-| **MoE** | Mixtral 8x7B | Expert-level logic/Speed | High VRAM (Total model size) |
-| **SSM** | Mamba-2 | Extreme context/Fast | Newer ecosystem |
-| **Hybrid**| Jamba | Best of both worlds | Complex to serve |
+| **Dense** | Llama-3, Gemma 3 | High consistency / Simple | Slow at extreme scale |
+| **MoE** | Mixtral 8x22B, GPT-4, Gemini | Expert-level logic/Speed | High VRAM (Total model size) |
+| **SSM** | Mamba-2, RWKV-6 | Extreme context/Fast | Newer ecosystem |
+| **Hybrid** | Jamba, Zamba | Best of both worlds | Complex to serve |
+
+### Small Language Models (SLMs) — The 2024–2025 Trend
+
+With inference-time compute scaling, **SLMs** (1B–14B parameters) are increasingly competitive with large models for specialized tasks:
+
+| Model | Params | Strength |
+|---|---|---|
+| **Phi-4** | 14B | Microsoft's best small reasoning model |
+| **Gemma 3 9B** | 9B | Multimodal, long context, on-device optimized |
+| **Qwen 2.5 7B** | 7B | Excellent multilingual and code performance |
+| **SmolLM 2** | 1.7B | Runs on-device (phones, microcontrollers) |
+| **Llama 3.2 3B** | 3B | Meta's best edge-deployable model |
+
+> **Key insight:** SLMs + Quantization + MoE routing = the "intelligence where you need it" stack. A 7B model on-device can handle 80% of tasks; the remaining 20% escalate to cloud-scale models.
 
 ---
 

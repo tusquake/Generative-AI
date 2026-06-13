@@ -115,6 +115,10 @@ if __name__ == "__main__":
 | **HyDE** | Fix "sparse" user queries | Asking a friend for a "hint" before searching |
 | **Parent-Doc** | Keep chunk small, context large | Looking at a snippet but reading the page |
 | **Multi-Query** | Capture different ways to ask | Asking 3 people the same question |
+| **GraphRAG** | Model entity relationships across documents | A social network map of your corpus |
+| **RAPTOR** | Recursive tree-based summarization for global queries | Reading a book's table of contents first |
+| **Agentic RAG** | Let an agent decide when/what to retrieve | A researcher who chooses their own sources |
+| **Contextual Retrieval** | Prepend chunk-level context before embedding | Giving a book chapter a summary header |
 
 ---
 

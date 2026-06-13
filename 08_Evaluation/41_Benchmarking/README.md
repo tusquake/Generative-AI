@@ -54,10 +54,15 @@ graph LR
 | Benchmark | What it tests | Why it matters |
 |---|---|---|
 | **MMLU** | General Knowledge (57 subjects) | Comprehensive intelligence |
-| **HumanEval**| Python Coding | Logic and syntax accuracy |
+| **MMLU-Pro** | Harder multi-step reasoning version | Separates frontier models from mid-tier |
+| **HumanEval** | Python Coding | Logic and syntax accuracy |
+| **LiveCodeBench** | Real competitive programming problems | Live, contamination-resistant code eval |
 | **GSM8K** | Grade School Math | Multi-step reasoning |
+| **AIME / MATH** | Competition-level math | Reasoning model quality (o1, R1) |
+| **SWE-bench** | Real GitHub Issues resolution | End-to-end software engineering ability |
 | **HellaSwag** | Common Sense Reasoning | Predicting the next event |
 | **TruthfulQA** | Hallucination / Factuality | Propensity to "lie" or repeat myths |
+| **Chatbot Arena (ELO)** | Human pairwise preference | Real-world user satisfaction |
 
 ---
 

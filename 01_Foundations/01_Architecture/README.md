@@ -49,6 +49,20 @@ graph TD
 
 Think of Self-Attention as a "Dinner Party" where the AI can listen to everyone at once. When someone says, *"The robot was broken so **it** stopped moving,"* the model uses attention to "weight" the relationship between **"it"** and **"robot"** much higher than other words.
 
+### Decoder-Only vs. Encoder-Decoder
+
+Modern frontier LLMs (GPT-4, Gemini, Llama) are **Decoder-Only** Transformers — only the right-to-left masked generation stack, optimized for text completion. **Encoder-Decoder** models (like T5, BART) are better for tasks like translation where you need a full "understanding" pass before writing.
+
+### Modern Architectural Optimizations (2023–2025 Frontier)
+
+| Optimization | What it does | Used In |
+|---|---|---|
+| **Flash Attention** | Reorders GPU memory ops to avoid the O(N²) memory wall without changing the math | GPT-4, Llama 3, Gemini |
+| **GQA (Grouped-Query Attention)** | Shares Key-Value heads across multiple Query heads — faster inference, less VRAM | Llama 3, Gemini Flash |
+| **RoPE (Rotary Position Embeddings)** | Encodes position via rotation — naturally extends to longer contexts | Llama 3, Mistral, Qwen |
+| **KV Cache** | Stores computed Key/Value matrices so prior tokens are never re-processed during generation | All production LLMs |
+| **Sliding Window Attention** | Limits each token's attention to a local window for very long contexts | Mistral, Gemma |
+
 ---
 
 ## 💻 Code & Implementation
@@ -110,6 +124,12 @@ if __name__ == "__main__":
 **Q: Explain the $O(N^2)$ complexity of standard attention.**
 > **Answer:** Standard "dense" attention compares every token to every other token. If you double the input length ($N$), the number of comparisons increases by $4$ ($N \times N$). This is why context windows have limits — eventually, you run out of memory to store the attention matrix.
 
+**Q: What is Flash Attention and why does it matter?**
+> **Answer:** Flash Attention is an I/O-aware exact attention algorithm that reorders computation using tiling to avoid materializing the full N×N matrix in slow GPU HBM memory. The math is identical, but it is 2-4x faster and uses up to 10x less memory — enabling longer contexts without any approximation.
+
+**Q: What is a KV Cache and why is it critical for inference?**
+> **Answer:** During autoregressive generation, every new token must attend to all previous tokens. Without the KV Cache, we'd recompute Key/Value matrices for all prior tokens on every new step — O(N²) repeated work. The KV Cache stores those computed matrices so only the new token's projection needs computing, making generation much faster and cheaper.
+
 ---
 
 ## Quick Reference
@@ -119,5 +139,7 @@ if __name__ == "__main__":
 | **Processing** | Sequential (One by one) | Parallel (Simultaneous) |
 | **Long-range Memory** | Poor (Gradients vanish) | Excellent (Multi-head Attention) |
 | **Training Speed** | Slow | Very Fast (GPU optimized) |
-| **Cost Complexity** | Linear $O(N)$ | Quadratic $O(N^2)$ |
+| **Cost Complexity** | Linear $O(N)$ | Quadratic $O(N^2)$ (mitigated by Flash Attn) |
 | **Best For** | Real-time audio streams | Complex reasoning, large-scale generation |
+| **Position Encoding** | Implicit (Sequential) | RoPE / ALiBi / Learned Embeddings |
+| **Modern Optimization** | N/A | Flash Attention, GQA, KV Cache, Sliding Window |

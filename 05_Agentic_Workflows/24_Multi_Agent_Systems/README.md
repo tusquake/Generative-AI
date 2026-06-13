@@ -115,6 +115,21 @@ if __name__ == "__main__":
 | **Hierarchical** | Manager delegates to workers | Large projects with many sub-tasks |
 | **Joint (Peer)** | Agents talk in a group chat | Creative brainstorming, complex debugging |
 | **Broadcast** | One-to-many info sharing | Alerting systems, keeping state in sync |
+| **Handoff** | Agent explicitly transfers control to another | Customer support escalation flows |
+
+### Modern MAS Frameworks (2024–2025)
+
+| Framework | Abstraction | Strength |
+|---|---|---|
+| **LangGraph** | State Machine (Nodes + Edges) | Full control, complex conditional flows |
+| **CrewAI** | Role-based teams (Crews) | Rapid team-oriented agent prototyping |
+| **AutoGen (Microsoft)** | Group Chat Conversations | Peer-to-peer agent dialogues |
+| **OpenAI Agent SDK** | Agents + Handoffs + Guardrails | Native integration with Responses API |
+| **Google ADK** | DAG-based agent workflows | Enterprise Google Cloud integration |
+
+### Model Context Protocol (MCP)
+
+**MCP** (Anthropic, 2024) is an open standard for connecting AI agents to tools, data sources, and services using a standardized client-server protocol — similar to what USB is for hardware. An LLM acting as a **MCP Client** can call any compliant **MCP Server** (file system, databases, APIs) without custom integration code. This is rapidly becoming the standard for agent-tool connectivity.
 
 ---
 

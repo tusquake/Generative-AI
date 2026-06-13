@@ -82,6 +82,18 @@ if __name__ == "__main__":
 | **PII Guarding** | Accidental data leakage | Compliance |
 | **Feedback UI** | "Was this helpful?" signals | RLHF / Iteration |
 
+### Leading Observability Platforms (2024–2025)
+
+| Platform | Type | Best For |
+|---|---|---|
+| **LangSmith** | Proprietary (LangChain) | LangChain/LangGraph native tracing |
+| **Langfuse** | Open-source (self-hostable) | Privacy-conscious enterprise teams |
+| **W&B Weave** | Proprietary (Weights & Biases) | ML experiment + LLM trace integration |
+| **Arize Phoenix** | Open-source | Hallucination detection + drift monitoring |
+| **OpenTelemetry (OTEL)**| Open standard | Vendor-neutral trace export to any backend |
+
+> **Production Recommendation:** Use **OpenTelemetry** to emit traces in standard format, then pipe them to your preferred backend (Langfuse for self-hosted, LangSmith for managed). This avoids vendor lock-in.
+
 ---
 
 ## Interview Questions & Model Answers

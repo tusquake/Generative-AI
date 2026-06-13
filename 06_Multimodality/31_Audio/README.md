@@ -98,9 +98,26 @@ if __name__ == "__main__":
 | Tool | Focus | Best For |
 |---|---|---|
 | **ElevenLabs** | Voice Cloning & TTS | Podcasts, narration, brand voice |
-| **Whisper (OpenAI)**| Speech-to-Text (STT) | Meeting notes, captioning, commands |
-| **Gemini 1.5 Flash** | Native Audio Input | Reasoning about tone, long audio files |
-| **Deepgram** | Enterprise STT | High-concurrency call center analytics |
+| **Whisper v3 (OpenAI)**| High-accuracy STT | Meeting notes, captioning, multi-language |
+| **Realtime API (OpenAI)** | Real-time voice conversation | Low-latency voice AI assistants |
+| **Gemini 2.0 Flash (Audio)** | Native Audio Input + Generation | Reasoning about tone, generate speech natively |
+| **Deepgram Nova-3** | Enterprise STT | High-concurrency call center analytics |
+| **Fish Audio** | Ultra-realistic TTS & Cloning | Voice consistency across long content |
+
+### Real-Time Voice Pipeline Architecture (2025)
+
+```mermaid
+graph LR
+    Mic[Microphone] --> VAD[VAD: End Detection]
+    VAD --> STT[STT: Whisper / Deepgram]
+    STT --> LLM[LLM: Gemini / GPT-4o]
+    LLM --> TTS[TTS: ElevenLabs / Native]
+    TTS --> Speaker[Speaker Output]
+    
+    style LLM fill:#f9f,stroke:#333
+```
+
+> **2025 Shift:** OpenAI's **Realtime API** and Google's **Live API** now offer *end-to-end* native voice-to-voice pipelines where the model processes audio *directly* (no STT → LLM → TTS chain), dramatically reducing latency from ~2s to ~300ms.
 
 ---
 

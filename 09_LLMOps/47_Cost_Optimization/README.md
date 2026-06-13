@@ -43,10 +43,15 @@ graph TD
 
 | Tier | Example | Relative Cost | Best For |
 |---|---|---|---|
-| **SLM (Edge)** | Phi-3, Gemma | $0 (Local) | PII masking, simple intent routing |
-| **Small (Flash)**| Gemini Flash | $ (Cheap) | RAG, summarization, simple agents |
-| **Premium (Pro)**| Gemini Pro | $$$ | Complex coding, long logic, judge |
+| **SLM (Edge)** | Phi-4-mini, Gemma 3 | $0 (Local) | PII masking, simple intent routing |
+| **Small (Flash)**| Gemini 2.0 Flash | $ (Cheap) | RAG, summarization, simple agents |
+| **Mid (Sonnet)**| Claude 3.5 Sonnet | $$ | Code generation, complex reasoning |
+| **Premium (Pro)**| Gemini 2.5 Pro, o3 | $$$ | Complex coding, long logic, judge |
 | **Batch API** | Any via Batch | 50% Discount | Translation, data cleaning, logs |
+
+### LiteLLM: The Universal Router
+
+**LiteLLM** is an open-source library that provides a single OpenAI-compatible interface to 100+ LLM providers. Using LiteLLM, you can write routing, fallback, and load-balancing logic once and apply it across Gemini, OpenAI, Anthropic, Groq, and others — preventing vendor lock-in.
 
 ---
 

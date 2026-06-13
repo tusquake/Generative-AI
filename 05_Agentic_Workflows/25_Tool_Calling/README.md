@@ -136,6 +136,18 @@ if __name__ == "__main__":
 | **None** | Model is forbidden from using tools | Pure conversation / reasoning |
 | **Required** | Model MUST pick a tool to proceed | Specialized agents (e.g., "Search-only" bot) |
 
+### Built-in / Native Tools (2024–2025)
+
+Modern APIs now provide **built-in tools** that execute on the provider's infrastructure — no custom backend code required:
+
+| Tool | Provider | What it does |
+|---|---|---|
+| **Web Search / Grounding** | Gemini, OpenAI | Live internet search with citations |
+| **Code Interpreter** | OpenAI, Gemini | Executes Python in a sandboxed container |
+| **File Search** | OpenAI | RAG over uploaded files without custom vector DB |
+| **Computer Use** | Anthropic (Claude), OpenAI | Controls browser/desktop GUI as a tool |
+| **MCP Servers** | All providers | Connect to any MCP-compliant data source |
+
 ---
 
 ## Interview Questions & Model Answers

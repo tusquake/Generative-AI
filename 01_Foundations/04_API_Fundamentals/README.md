@@ -38,6 +38,14 @@ sequenceDiagram
 2. **TPS (Tokens Per Second):** How fast does the model "type"?
 3. **Wait time vs. Streaming:** Streaming is non-negotiable for modern UX.
 
+### The Responses API (2025 Paradigm Shift)
+
+OpenAI introduced the **Responses API** as a stateful alternative to the Chat Completions API. Key differences:
+- **Stateful conversations:** The API manages conversation history server-side, eliminating the need to send full history every turn.
+- **Built-in tool execution:** Web search, code interpreter, and file search are native tools, not external functions.
+- **Computer Use:** Models can control browser/desktop GUI directly via the API.
+- Gemini's equivalent is the **Stateful Session API** with maintained context.
+
 ---
 
 ## 💻 Code & Implementation
@@ -126,3 +134,4 @@ if __name__ == "__main__":
 | **High Latency** | Streaming & Model Distillation | TTFT (Time to First Token) |
 | **API Instability** | Retries & Model Fallbacks | Success Rate (%) |
 | **Context Limit** | Chunking & Vector Search | Context Coverage |
+| **State Management** | Responses API / Stateful Sessions | Session Resumption Rate |

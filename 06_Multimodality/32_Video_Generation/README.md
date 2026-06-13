@@ -102,9 +102,17 @@ if __name__ == "__main__":
 | Model | Owner | Focus |
 |---|---|---|
 | **Sora** | OpenAI | High cinematic quality + long duration |
+| **Veo 2** | Google DeepMind | Photorealistic physics simulation, 4K |
 | **Gen-3 Alpha** | Runway | Professional filmmaking & physics control |
-| **Dream Machine**| Luma AI | Rapid prototyping & image-to-video |
-| **Kling / Vidu** | Kuaishou | Extreme biological and motion accuracy |
+| **Dream Machine** | Luma AI | Rapid prototyping & image-to-video |
+| **Kling 2.0** | Kuaishou | Extreme biological and motion accuracy |
+| **MiniMax Video** | MiniMax | High-quality + long-form video |
+
+### Emerging Capabilities (2025)
+
+- **Real-time video generation:** Models like Google's Veo 2 and specialized APIs can now generate short clips in seconds.
+- **Interactive / Controllable Video:** Camera path control (zoom, pan, orbit) is becoming standard — users specify camera motion rather than just scene description.
+- **C2PA Watermarking:** The Coalition for Content Provenance and Authenticity standard is being baked into video generators to cryptographically sign AI-generated content, combating deepfakes.
 
 ---
 

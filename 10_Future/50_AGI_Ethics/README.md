@@ -45,6 +45,19 @@ graph TD
 | **Agency** | AI taking autonomous actions | Human-in-the-loop (HITL) approvals |
 | **Existential** | AI goal-drift (Superintelligence) | Robust Alignment & Formal Verification |
 | **Job Displacement**| Economic Inequality | Human-AI Collaboration (Copilots) |
+| **Misinformation** | Deepfakes and synthetic content | C2PA Watermarking + Provenance Standards |
+
+### AI Governance Landscape (2024–2025)
+
+| Body / Law | Jurisdiction | Impact |
+|---|---|---|
+| **EU AI Act** | European Union | World's first comprehensive AI law; risk-based regulation |
+| **US AI Executive Orders** | United States | Mandatory safety evaluations for frontier models |
+| **UK AI Safety Institute** | United Kingdom | Pre-deployment red-teaming of frontier models |
+| **Frontier Safety Evals** | OpenAI, Anthropic, Google | Internal model evaluations before release |
+| **UN AI Advisory Body** | Global | Non-binding international governance recommendations |
+
+> **For engineers:** The EU AI Act classifies systems by risk. "High-risk" AI (medical, critical infrastructure) requires mandatory documentation, bias audits, and human oversight before deployment. Building for compliance now is far cheaper than retrofitting.
 
 ---
 

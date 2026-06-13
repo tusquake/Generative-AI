@@ -120,8 +120,10 @@ if __name__ == "__main__":
 | Tool | Approach | Best For |
 |---|---|---|
 | **RAGAS** | LLM-based metrics (Faithfulness, etc.) | Automated CI/CD pipelines |
+| **DeepEval** | Pytest-style unit tests for LLMs | Developer-friendly regression testing |
 | **LangSmith** | Visual tracing & human annotation | Debugging specific failures |
 | **G-Eval** | Weighted judging using 1-5 scales | Researching model performance |
+| **Arize Phoenix** | Drift + hallucination monitoring | Live production monitoring |
 | **Human-in-the-Loop**| Expert manual verification | Final "Sign-off" before launch |
 
 ---

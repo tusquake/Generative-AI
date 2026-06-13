@@ -5,7 +5,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def run_grounding_verification_demo():
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY"),
+        http_options={'api_version': 'v1'}
+    )
 
     context = "The company revenue in 2023 was $4.5 Million, a 10% increase from 2022."
     

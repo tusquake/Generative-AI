@@ -46,6 +46,10 @@ only         (hint)        Calling           Enforcement   Decoding
 
 **4. Schema Enforcement (Pydantic)** — Parsing the response into a Pydantic model for validation and automatic correction.
 
+**5. Constrained Decoding** — The frontier approach. Libraries like **Outlines** and **SGLang** hook into the model's logit computation and *mask out* any token that would violate the schema at every generation step. This provides mathematically guaranteed conformance — no post-processing needed.
+
+**6. OpenAI Native Structured Outputs** — Introduced in 2024 via the `response_format={"type": "json_schema", "strict": true}` parameter. The API guarantees 100% schema conformance by using constrained decoding internally.
+
 ---
 
 ## 💻 Code & Implementation
@@ -130,3 +134,5 @@ if __name__ == "__main__":
 | JSON mode | Syntactic 100% | When schema varies |
 | Tool calling | ~95% | Agents, pipelines |
 | Pydantic | ~99% (with retry) | Production extraction |
+| OpenAI Strict Mode | 100% | Guaranteed conformance (production) |
+| Constrained Decoding | 100% | Open-source / self-hosted models |

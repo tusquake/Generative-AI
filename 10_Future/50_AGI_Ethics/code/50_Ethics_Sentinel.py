@@ -9,7 +9,10 @@ def run_sentinel_pattern():
     Demonstrates the 'Sentinel' pattern where a second AI (The Ethics Officer)
     monitors the output of a primary AI for ethical or safety violations.
     """
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY"),
+        http_options={'api_version': 'v1'}
+    )
 
     # Primary AI Response (Simulated)
     primary_ai_output = """

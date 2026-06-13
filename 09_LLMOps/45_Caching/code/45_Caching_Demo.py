@@ -6,7 +6,10 @@ import datetime
 load_dotenv()
 
 def run_cache_demo():
-    client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY"),
+        http_options={'api_version': 'v1'}
+    )
     
     # NOTE: Caching usually requires a large amount of content (e.g. > 32,768 tokens)
     # to be cost-effective or even allowed by the API.

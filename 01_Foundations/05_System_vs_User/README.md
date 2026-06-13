@@ -115,3 +115,5 @@ if __name__ == "__main__":
 | **System** | Developer | Permanent (Context-wide) | Guidelines, Persona, Safety, Rules |
 | **User** | End-User | Ephemeral (Turn-based) | Specific tasks, Questions, Data |
 | **Assistant** | Model | Historical | Conversational history, Context |
+| **Tool** | App Code | Ephemeral | Tool call results / observations |
+| **Developer** | Developer (Anthropic) | Turn-scoped | Mid-conversation rule injection |

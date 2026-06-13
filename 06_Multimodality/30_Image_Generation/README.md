@@ -92,13 +92,21 @@ if __name__ == "__main__":
 
 ## Proprietary vs. Open-Source
 
-| Feature | DALL-E 3 (OpenAI) | Stable Diffusion (Local/HF) |
-|---|---|---|
-| **Ease of Use** | Extremely High (Chat-based) | Moderate (Requires setup) |
-| **Control** | Low (Black box) | Extremely High (ControlNet, LoRA) |
-| **Cost** | Per-image fee | Free (if you have GPUs) |
-| **Safety** | Rigid Built-in Filters | User-defined |
-| **Best For** | Casual creative ideas | Custom workflows, branding, video |
+| Feature | DALL-E 3 (OpenAI) | Stable Diffusion (Local/HF) | Imagen 3 (Google) | FLUX (Black Forest) |
+|---|---|---|---|---|
+| **Ease of Use** | Extremely High (Chat-based) | Moderate (Requires setup) | High (Vertex AI) | High (HF Inference API) |
+| **Control** | Low (Black box) | Extremely High (ControlNet, LoRA) | Moderate | High (Guidance) |
+| **Cost** | Per-image fee | Free (if you have GPUs) | Per-image fee | Free/Paid tiers |
+| **Quality** | Very High | Variable by checkpoint | State-of-the-art (2024) | Excellent text rendering |
+| **Best For** | Casual creative ideas | Custom workflows, branding | Marketing assets, product shots | Professional design, print |
+
+### Native Multimodal Image Generation (2025)
+
+**Gemini 2.0 Flash** and **GPT-4o** can now generate images natively within a single multimodal API call — no separate image model needed. You can interleave text and images in one response. This enables workflows like:
+- "Here is a Python error, draw me a diagram of the call stack."
+- "Edit this product photo: remove the background and add a sunset."
+
+This blurs the line between text generation and image generation APIs.
 
 ---
 

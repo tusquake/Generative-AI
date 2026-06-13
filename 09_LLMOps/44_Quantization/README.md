@@ -49,7 +49,21 @@ graph LR
 | **FP16 / BF16** | 16-bit | 2 bytes | Standard Inference / Cloud |
 | **INT8** | 8-bit | 1 byte | Early quantization (Legacy) |
 | **4-bit (AWQ)** | 4-bit | 0.5 bytes | **Production Standard** (GPU) |
+| **4-bit (GPTQ)** | 4-bit | 0.5 bytes | GPU inference (older standard) |
+| **EXL2** | Variable | ~0.4-0.5 bytes | Maximum GPU throughput |
 | **GGUF (K-Quants)**| Variable | ~0.4 bytes | **Local Standard** (CPU + GPU) |
+
+### Serving Engines (2024–2025)
+
+| Engine | Best For | Key Feature |
+|---|---|---|
+| **vLLM** | Cloud GPU inference | PagedAttention for massive KV cache efficiency |
+| **SGLang** | Structured / constrained generation | RadixAttention for prefix caching |
+| **llama.cpp / Ollama** | Local CPU + GPU inference | GGUF format, easy setup |
+| **TensorRT-LLM** | Enterprise NVIDIA deployment | Maximum GPU throughput |
+| **Apple MLX** | Apple Silicon (M1/M2/M3) | Unified memory, Metal GPU acceleration |
+
+> **2025 Tip:** On Apple Silicon Macs, **MLX** (Apple's ML framework) can run Llama 3 8B at 50+ tokens/sec using the unified memory architecture — no discrete GPU required.
 
 ---
 

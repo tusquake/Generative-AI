@@ -42,6 +42,25 @@ Imagine predicting the next word for: *"The capital of France is..."*
 **Top-K = 2** always takes the absolute top 2: `[Paris, Lyon]`.
 **Top-P = 0.95** adds probabilities until they hit 0.95. Since Paris is 94%, it adds Lyon (2%) to hit 96% and stops. The pool is `[Paris, Lyon]`. Top-P is dynamic and safer for production.
 
+### Min-P Sampling (The Newer Alternative)
+
+**Min-P** is emerging as a superior alternative to Top-P. Instead of a cumulative threshold, Min-P sets a *relative floor* — a token is only eligible if its probability is at least `min_p` times the probability of the most likely token. This better preserves diversity in creative tasks while pruning incoherent completions.
+
+### Penalization Parameters
+
+| Parameter | Effect | Typical Value |
+|---|---|---|
+| `presence_penalty` | Penalizes tokens that have appeared at all (encourages new topics) | 0.0 - 1.0 |
+| `frequency_penalty` | Penalizes tokens proportional to how often they've appeared (reduces repetition) | 0.0 - 1.5 |
+| `repetition_penalty` | Multiplicative equivalent used by HuggingFace models | 1.0 - 1.3 |
+
+### Reasoning Models (o1, o3, Gemini 2.5 Thinking)
+
+Models with built-in "thinking" (o1, o3-mini, Gemini 2.5 Flash/Pro with thinking) behave differently:
+- **Temperature is usually fixed at 1.0** by the provider for reasoning models.
+- They expose a `thinking_budget` or `max_reasoning_tokens` parameter to control internal CoT tokens.
+- You pay for **thinking tokens + output tokens** separately.
+
 ---
 
 ## 💻 Code & Implementation
@@ -119,4 +138,7 @@ if __name__ == "__main__":
 | **Temperature** | 0.0 - 0.2 | 0.7 - 1.0 | Controls randomness/entropy |
 | **Top-P** | 0.1 | 0.9 | Controls pool size based on probability |
 | **Top-K** | 1 | 40 - 50 | Limits candidates to a fixed count |
+| **Min-P** | 0.1 | 0.05 | Relative floor on token probability |
 | **Max Tokens** | 100 - 500 | 1000+ | Limits the length of output |
+| **Presence Penalty** | 0.0 | 0.5 - 1.0 | Encourages topic diversity |
+| **Frequency Penalty** | 0.0 | 0.3 - 1.0 | Reduces word repetition |

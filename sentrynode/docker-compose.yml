@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  sentrynode-db:
+    image: ankane/pgvector:v0.5.1
+    container_name: sentrynode-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: sentrynode
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sentrynode-network
+
+  sentrynode-redis:
+    image: redis:7.2-alpine
+    container_name: sentrynode-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - sentrynode-network
+
+volumes:
+  postgres_data:
+
+networks:
+  sentrynode-network:
+    name: sentrynode-network
+    driver: bridge
